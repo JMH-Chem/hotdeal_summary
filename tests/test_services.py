@@ -140,3 +140,22 @@ def test_aliexpress_product_web_finds_same_id(monkeypatch):
 
     offer = asyncio.run(run())
     assert offer is not None and offer.product_ref == pid and offer.price > 0
+
+
+def test_polite_wait_spaces_same_host(monkeypatch):
+    import asyncio
+    import time
+
+    import httpx
+
+    from app import http as apphttp
+
+    monkeypatch.setitem(apphttp.CRAWL_DELAYS, "example.test", 0.3)
+
+    async def run():
+        start = time.monotonic()
+        for _ in range(3):
+            await apphttp.polite_wait(httpx.Request("GET", "https://example.test/x"))
+        return time.monotonic() - start
+
+    assert asyncio.run(run()) >= 0.55
