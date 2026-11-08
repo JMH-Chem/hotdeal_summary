@@ -16,7 +16,7 @@ from fastapi.templating import Jinja2Templates
 
 from .config import get_settings
 from .db import connect, init_db, utcnow_iso
-from .parsing import KST, format_won, to_kst_str
+from .parsing import KST, deal_search_query, format_won, to_kst_str
 from .services.collector import collect_all
 from .services.compare import compare, landed_price
 from .services.customs import DUTY_RATES
@@ -30,6 +30,7 @@ APP_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(APP_DIR / "templates"))
 templates.env.filters["won"] = format_won
 templates.env.filters["kst"] = to_kst_str
+templates.env.filters["deal_query"] = deal_search_query
 PAGE_SIZE = 40
 
 
@@ -83,7 +84,7 @@ def render(request: Request, name: str, **ctx) -> HTMLResponse:
 # ------------------------------------------------------------------ 핫딜
 
 def query_deals(conn, q: str = "", source: str = "", only_ali: bool = False, only_coupon: bool = False,
-                page: int = 1, dedupe: bool = True):
+                page: int = 1, dedupe: bool = True, sort: str = "new"):
     where, params = [], []
     if q:
         for tok in q.split():
@@ -101,16 +102,18 @@ def query_deals(conn, q: str = "", source: str = "", only_ali: bool = False, onl
         sql += " WHERE " + " AND ".join(where)
     if dedupe:
         sql = f"SELECT * FROM ({sql}) GROUP BY COALESCE(dedupe_key, id)"
-    sql += " ORDER BY posted_at DESC LIMIT ? OFFSET ?"
+    order = "COALESCE(views, 0) DESC, posted_at DESC" if sort == "views" else "posted_at DESC"
+    sql += f" ORDER BY {order} LIMIT ? OFFSET ?"
     params += [PAGE_SIZE, (page - 1) * PAGE_SIZE]
     return conn.execute(sql, params).fetchall()
 
 
 @app.get("/", response_class=HTMLResponse)
-def index(request: Request, q: str = "", source: str = "", ali: int = 0, coupon: int = 0, page: int = Query(1, ge=1)):
+def index(request: Request, q: str = "", source: str = "", ali: int = 0, coupon: int = 0, sort: str = "new",
+          page: int = Query(1, ge=1)):
     conn = db()
     try:
-        deals = query_deals(conn, q, source, bool(ali), bool(coupon), page)
+        deals = query_deals(conn, q, source, bool(ali), bool(coupon), page, sort=sort)
         source_names = [r[0] for r in conn.execute("SELECT DISTINCT source_name FROM deals ORDER BY 1")]
         coupons = conn.execute("SELECT * FROM coupons ORDER BY last_seen DESC LIMIT 8").fetchall()
         status = conn.execute("SELECT * FROM source_status ORDER BY source").fetchall()
@@ -118,7 +121,7 @@ def index(request: Request, q: str = "", source: str = "", ali: int = 0, coupon:
     finally:
         conn.close()
     events = [e for e in load_events() if e.status() != "ended"][:3]
-    return render(request, "index.html", deals=deals, q=q, source=source, ali=ali, coupon=coupon, page=page,
+    return render(request, "index.html", deals=deals, q=q, source=source, ali=ali, coupon=coupon, sort=sort, page=page,
                   source_names=source_names, coupons=coupons, events=events, status=status, total=total,
                   page_size=PAGE_SIZE)
 

@@ -151,6 +151,15 @@ def to_kst_str(iso: str | None, fmt: str = "%m-%d %H:%M") -> str:
         return iso
 
 
+def deal_search_query(title: str, max_words: int = 6) -> str:
+    """핫딜 제목 → 가격비교 검색어: [쇼핑몰]·(가격/배송)·가격 문구 제거 후 앞 단어만."""
+    text = _MALL_RE.sub("", title)
+    text = _PAREN_RE.sub(" ", text)
+    text = re.sub(r"[\d,]+\s*(?:원|만원)|\$\s*[\d.,]+|무료배송|무배|/\s*\S*배송", " ", text)
+    words = [w for w in re.split(r"\s+", text) if w and w not in {"/", "-", "+"}]
+    return " ".join(words[:max_words])
+
+
 def format_won(value: int | float | None) -> str:
     if value is None:
         return "-"

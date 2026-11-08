@@ -10,6 +10,10 @@
     </select>
     <label><input type="checkbox" name="ali" value="1" {{ 'checked' if ali }}> 알리만</label>
     <label><input type="checkbox" name="coupon" value="1" {{ 'checked' if coupon }}> 쿠폰/코드</label>
+    <select name="sort">
+      <option value="new" {{ 'selected' if sort != 'views' }}>최신순</option>
+      <option value="views" {{ 'selected' if sort == 'views' }}>조회순</option>
+    </select>
     <button>검색</button>
   </form>
   <p class="muted">총 {{ total }}건 수집 · 동일 딜은 묶어서 표시</p>
@@ -29,7 +33,7 @@
         {% if d.price %}<span class="price">{% if d.currency == 'USD' %}${{ d.price }}{% else %}{{ d.price | won }}{% endif %}</span>{% endif %}
         {% if d.shipping %}<span>🚚 {{ d.shipping }}</span>{% endif %}
         {% if d.views %}<span class="muted">조회 {{ d.views }}</span>{% endif %}
-        {% if d.price and d.currency == 'KRW' %}<a class="mini" href="/compare?q={{ d.title | replace('[' ~ (d.mall or '') ~ ']', '') | truncate(40, True, '') | urlencode }}">최저가 비교</a>{% endif %}
+        {% if d.price %}<a class="mini" href="/compare?q={{ d.title | deal_query | urlencode }}">최저가 비교</a>{% endif %}
       </div>
     </li>
   {% else %}
@@ -37,8 +41,8 @@
   {% endfor %}
   </ul>
   <div class="pager">
-    {% if page > 1 %}<a href="?q={{ q|urlencode }}&source={{ source|urlencode }}&ali={{ ali }}&coupon={{ coupon }}&page={{ page - 1 }}">← 이전</a>{% endif %}
-    {% if deals|length == page_size %}<a href="?q={{ q|urlencode }}&source={{ source|urlencode }}&ali={{ ali }}&coupon={{ coupon }}&page={{ page + 1 }}">다음 →</a>{% endif %}
+    {% if page > 1 %}<a href="?q={{ q|urlencode }}&source={{ source|urlencode }}&ali={{ ali }}&coupon={{ coupon }}&sort={{ sort }}&page={{ page - 1 }}">← 이전</a>{% endif %}
+    {% if deals|length == page_size %}<a href="?q={{ q|urlencode }}&source={{ source|urlencode }}&ali={{ ali }}&coupon={{ coupon }}&sort={{ sort }}&page={{ page + 1 }}">다음 →</a>{% endif %}
   </div>
 </section>
 <aside class="side-col">

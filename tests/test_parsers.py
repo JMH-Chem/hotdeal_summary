@@ -110,3 +110,10 @@ def test_danawa_overseas_flag():
 
     assert _OVERSEAS_TITLE.search("Western Digital WD BLACK SN850X M.2 NVMe 해외구매")
     assert not _OVERSEAS_TITLE.search("Western Digital WD BLACK SN850X M.2 NVMe")
+
+
+def test_deal_search_query():
+    from app.parsing import deal_search_query
+
+    assert deal_search_query("[CJ더마켓] 햇반 210g x 72개 (67,684원/무배)") == "햇반 210g x 72개"
+    assert deal_search_query("[일마존] Audio Technica ATH-M50xGM /16만원") == "Audio Technica ATH-M50xGM"
