@@ -234,11 +234,73 @@ async def ali_call(client: httpx.AsyncClient, settings: Settings, method: str, b
     return resp.json()
 
 
+ALI_KR_COOKIE = "site=kor&c_tp=KRW&region=KR&b_locale=ko_KR"
+
+
+def ali_search_url(query: str) -> str:
+    slug = "-".join(quote(t) for t in query.split())
+    return f"https://ko.aliexpress.com/w/wholesale-{slug}.html"
+
+
+def parse_ali_search_html(html: str) -> list[Offer]:
+    """알리 한국 검색 페이지에 내장된 itemList JSON 파싱 (API 키 없을 때 폴백)."""
+    idx = html.find('"itemList":')
+    if idx < 0:
+        return []
+    try:
+        data, _ = json.JSONDecoder().raw_decode(html[idx + len('"itemList":'):])
+    except json.JSONDecodeError:
+        return []
+    offers = []
+    for it in data.get("content") or []:
+        sale = ((it.get("prices") or {}).get("salePrice") or {})
+        if (sale.get("currencyCode") or "KRW") != "KRW":
+            continue
+        try:
+            price = int(round(float(sale.get("minPrice") or 0)))
+        except (TypeError, ValueError):
+            continue
+        pid = str(it.get("productId") or "")
+        title = ((it.get("title") or {}).get("displayTitle") or "").strip()
+        if price <= 0 or not pid or not title:
+            continue
+        img = ((it.get("image") or {}).get("imgUrl") or "")
+        offers.append(
+            Offer(
+                provider="aliexpress",
+                provider_name="알리익스프레스",
+                title=title,
+                price=price,
+                url=f"https://ko.aliexpress.com/item/{pid}.html",
+                mall="AliExpress",
+                image=("https:" + img) if img.startswith("//") else (img or None),
+                is_overseas=True,
+                product_ref=pid,
+                extra={"sold": (it.get("trade") or {}).get("tradeDesc"),
+                       "rating": (it.get("evaluation") or {}).get("starRating"),
+                       "via": "web"},
+            )
+        )
+    return offers
+
+
+async def search_aliexpress_web(client: httpx.AsyncClient, query: str) -> list[Offer]:
+    resp = await client.get(ali_search_url(query), headers={"Cookie": f"aep_usuc_f={ALI_KR_COOKIE}"})
+    resp.raise_for_status()
+    return parse_ali_search_html(resp.text)
+
+
 async def search_aliexpress(client: httpx.AsyncClient, settings: Settings, query: str, page_size: int = 20) -> ProviderResult:
-    link = f"https://ko.aliexpress.com/w/wholesale-{quote(query)}.html"
+    link = ali_search_url(query)
     if not settings.ali_enabled:
-        return ProviderResult("aliexpress", "알리익스프레스", [], ok=False,
-                              message="ALI_APP_KEY/SECRET 미설정 (Affiliate API 키 필요)", search_url=link)
+        # 키가 없어도 알리가 비교에서 빠지지 않도록 한국 검색 페이지 내장 데이터를 사용
+        try:
+            offers = await search_aliexpress_web(client, query)
+        except httpx.HTTPError as exc:
+            return ProviderResult("aliexpress", "알리익스프레스", [], ok=False,
+                                  message=f"웹 검색 실패({type(exc).__name__}) · API 키 설정 권장", search_url=link)
+        return ProviderResult("aliexpress", "알리익스프레스", offers, ok=bool(offers),
+                              message="" if offers else "결과 없음(페이지 구조 변경 가능)", search_url=link)
     payload = await ali_call(client, settings, "aliexpress.affiliate.product.query", {
         "keywords": query,
         "target_currency": "KRW",

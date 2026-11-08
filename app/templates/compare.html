@@ -39,6 +39,7 @@
         <td>{% if o.image %}<img class="thumb" src="{{ o.image }}" alt="" loading="lazy" referrerpolicy="no-referrer">{% endif %}</td>
         <td><a href="{{ o.url }}" target="_blank" rel="noopener nofollow">{{ o.title }}</a>
           {% if o.is_overseas %}<span class="chip ali">해외직구</span>{% endif %}
+          {% if o.provider == 'aliexpress' and (o.extra.get('sold') or o.extra.get('rating')) %}<div class="muted small">{% if o.extra.get('rating') %}★{{ o.extra.get('rating') }} {% endif %}{{ o.extra.get('sold') or '' }}</div>{% endif %}
           {% if o.extra.get('home_shopping') %}<span class="chip upcoming">홈쇼핑</span>{% endif %}</td>
         <td>{{ o.provider_name }}<div class="muted small">{{ o.mall or '' }}</div></td>
         <td>{{ o.price | won }}{% if o.shipping %}<div class="muted small">+배송 {{ o.shipping | won }}</div>{% endif %}</td>
@@ -52,6 +53,7 @@
     {% endfor %}
     </tbody>
   </table>
+  <p class="muted small">⚠️ 알리 브랜드 상품(SSD·메모리·이어폰 등)은 비정품/용량 조작품이 섞여 있을 수 있으니 판매자 평점·판매량·리뷰를 꼭 확인하세요. 알리 가격은 옵션(용량·색상) 중 최저가 기준이며, API 키가 없으면 한국 검색 페이지 데이터를 사용합니다.</p>
   <p class="muted small">실구매가 = 가격 + 배송비 (+ 해외직구는 관부가세 추정치, 기준환율 {{ settings.usd_krw | int }}원/USD). 쿠폰·카드 할인은 반영되지 않습니다 → <a href="/coupons">쿠폰 보기</a></p>
 {% else %}
   <div class="card">

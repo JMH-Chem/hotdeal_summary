@@ -49,7 +49,10 @@ def landed_price(offer: Offer) -> int:
 def rank_offers(query: str, offers: list[Offer], settings: Settings, category: str = "general",
                 min_relevance: float = 0.5) -> list[Offer]:
     kept = []
+    want_used = "중고" in query
     for o in offers:
+        if not want_used and "중고" in o.title:
+            continue  # 새 상품 기준 비교 (검색어에 '중고'가 있으면 포함)
         o.extra["relevance"] = round(relevance(query, o.title), 2)
         if o.extra["relevance"] < min_relevance:
             continue

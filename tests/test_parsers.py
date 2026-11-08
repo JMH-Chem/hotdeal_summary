@@ -72,3 +72,14 @@ def test_aliexpress_product_id():
     assert aliexpress_product_id("https://ko.aliexpress.com/item/1005006123456789.html?spm=x") == "1005006123456789"
     assert aliexpress_product_id("1005006123456789") == "1005006123456789"
     assert aliexpress_product_id("https://example.com") is None
+
+
+def test_aliexpress_search_html_fallback():
+    from app.sources.shopping import ali_search_url, parse_ali_search_html
+
+    offers = parse_ali_search_html(read("aliexpress_search.html"))
+    assert len(offers) >= 10
+    o = offers[0]
+    assert o.provider == "aliexpress" and o.is_overseas and o.price > 1000
+    assert o.url.startswith("https://ko.aliexpress.com/item/") and o.image.startswith("https://")
+    assert ali_search_url("ssd 1tb") == "https://ko.aliexpress.com/w/wholesale-ssd-1tb.html"
