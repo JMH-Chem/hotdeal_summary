@@ -83,3 +83,23 @@ def test_aliexpress_search_html_fallback():
     assert o.provider == "aliexpress" and o.is_overseas and o.price > 1000
     assert o.url.startswith("https://ko.aliexpress.com/item/") and o.image.startswith("https://")
     assert ali_search_url("ssd 1tb") == "https://ko.aliexpress.com/w/wholesale-ssd-1tb.html"
+
+
+def test_source_fetch_retries_transient_error():
+    import asyncio
+
+    import httpx
+
+    calls = {"n": 0}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise httpx.RemoteProtocolError("Server disconnected without sending a response.")
+        return httpx.Response(200, text=read("ppomppu.xml"))
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            return await SOURCE_MAP["ppomppu"].fetch(client)
+
+    assert len(asyncio.run(run())) >= 10 and calls["n"] == 2

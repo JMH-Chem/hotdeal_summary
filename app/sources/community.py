@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import html as htmllib
 import re
 from dataclasses import dataclass, field
@@ -49,10 +50,17 @@ class CommunitySource:
     detail_selector: str | None = None
     tags: tuple[str, ...] = field(default_factory=tuple)
 
-    async def fetch(self, client: httpx.AsyncClient) -> list[RawDeal]:
-        resp = await client.get(self.url)
-        resp.raise_for_status()
-        return self.parser(self, resp.text)
+    async def fetch(self, client: httpx.AsyncClient, retries: int = 1) -> list[RawDeal]:
+        for attempt in range(retries + 1):
+            try:
+                resp = await client.get(self.url)
+                resp.raise_for_status()
+                return self.parser(self, resp.text)
+            except (httpx.TransportError, httpx.RemoteProtocolError):
+                if attempt >= retries:
+                    raise
+                await asyncio.sleep(2 * (attempt + 1))  # 일시적 연결 끊김은 한 번 더 시도
+        return []
 
     async def fetch_detail_text(self, client: httpx.AsyncClient, url: str) -> str | None:
         if not self.detail_selector:
