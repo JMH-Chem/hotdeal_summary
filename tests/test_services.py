@@ -102,3 +102,18 @@ def test_events_file_loads():
     gw = next(e for e in events if e.slug == "aliexpress-1111-2026")
     assert gw.status(NOW) == "ongoing"
     assert gw.end.date().isoformat() == "2026-11-18"
+
+
+def test_save_coupons_prefers_complete_info():
+    from app.db import connect, init_db
+    from app.services.coupons import CouponCandidate, save_coupons
+
+    conn = connect(":memory:")
+    init_db(conn)
+    partial = CouponCandidate("AliExpress", "KBTY04", 6000, None, None, "KRW", None, "뽐뿌", "ctx1", None)
+    full = CouponCandidate("AliExpress", "KBTY04", 4, None, 27, "USD", "2026-11-18", "클리앙", "ctx2", "aliexpress-1111-2026")
+    save_coupons(conn, [partial], "https://a")
+    save_coupons(conn, [full], "https://b")
+    row = conn.execute("SELECT * FROM coupons").fetchone()
+    assert (row["discount_amount"], row["min_spend"], row["currency"], row["source_url"]) == (4, 27, "USD", "https://b")
+    assert row["event_slug"] == "aliexpress-1111-2026"

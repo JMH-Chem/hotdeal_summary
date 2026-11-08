@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import httpx
 
@@ -20,7 +20,7 @@ from .notify import notify
 from .tracker import keyword_matches
 
 log = logging.getLogger(__name__)
-MAX_DETAIL_FETCH_PER_RUN = 10
+MAX_DETAIL_FETCH_PER_RUN = 15
 
 
 def _active_events() -> list[ShoppingEvent]:
@@ -63,17 +63,25 @@ def store_deal(conn: sqlite3.Connection, raw: RawDeal, tags: tuple[str, ...] = (
     return int(cur.lastrowid)
 
 
+@dataclass
+class DetailBudget:
+    """본문 조회 횟수 제한 + 이번 실행에서 본문이 막힌(403 등) 소스는 건너뛴다."""
+    remaining: int = MAX_DETAIL_FETCH_PER_RUN
+    blocked: set[str] = field(default_factory=set)
+
+
 async def _coupon_pass(conn: sqlite3.Connection, client: httpx.AsyncClient, src: CommunitySource,
-                       raw: RawDeal, budget: list[int]) -> int:
+                       raw: RawDeal, budget: DetailBudget) -> int:
     text = f"{raw.title}\n{raw.summary or ''}"
-    if budget[0] > 0 and src.detail_selector:
-        budget[0] -= 1
+    if budget.remaining > 0 and src.detail_selector and src.name not in budget.blocked:
+        budget.remaining -= 1
         try:
             detail = await src.fetch_detail_text(client, raw.url)
             if detail:
                 text = f"{raw.title}\n{detail}"
         except httpx.HTTPError as exc:
             log.info("detail fetch failed %s: %s", raw.url, exc)
+            budget.blocked.add(src.name)  # 같은 사이트의 다른 게시판도 이번 실행에서는 생략
         await asyncio.sleep(0.5)
     ali = "aliexpress" in src.tags or is_aliexpress(raw.title)
     platform = "AliExpress" if ali else detect_platform(raw.title, "기타")
@@ -99,7 +107,7 @@ async def _keyword_pass(conn: sqlite3.Connection, raw: RawDeal, client: httpx.As
 
 
 async def collect_source(conn: sqlite3.Connection, client: httpx.AsyncClient, src: CommunitySource,
-                         budget: list[int], first_run: bool) -> SourceRun:
+                         budget: DetailBudget, first_run: bool) -> SourceRun:
     run = SourceRun(src.key, ok=True)
     try:
         raws = await src.fetch(client)
@@ -124,7 +132,7 @@ async def collect_all(conn: sqlite3.Connection, only: tuple[str, ...] = ()) -> l
     settings = get_settings()
     sources = enabled_sources(only or settings.enabled_sources)
     first_run = conn.execute("SELECT COUNT(*) FROM deals").fetchone()[0] == 0
-    budget = [MAX_DETAIL_FETCH_PER_RUN]
+    budget = DetailBudget()
     runs: list[SourceRun] = []
     async with make_client() as client:
         for src in sources:

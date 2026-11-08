@@ -26,6 +26,7 @@ class CompareResult:
     cheapest: Offer | None = None
     cheapest_domestic: Offer | None = None
     cheapest_overseas: Offer | None = None
+    cheapest_home: Offer | None = None
     fetched_at: float = field(default_factory=time.time)
 
 
@@ -93,5 +94,6 @@ async def compare(query: str, category: str = "general", client: httpx.AsyncClie
     result.cheapest = ranked[0] if ranked else None
     result.cheapest_domestic = next((o for o in ranked if not o.is_overseas), None)
     result.cheapest_overseas = next((o for o in ranked if o.is_overseas), None)
+    result.cheapest_home = next((o for o in ranked if o.extra.get("home_shopping")), None)
     _cache[key] = (time.time(), result)
     return result

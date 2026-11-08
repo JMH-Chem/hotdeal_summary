@@ -17,6 +17,17 @@ from ..config import Settings
 
 ALI_GATEWAY = "https://api-sg.aliexpress.com/sync"
 
+# 네이버쇼핑 결과의 mallName으로 TV홈쇼핑/T커머스 판매처를 식별한다.
+HOME_SHOPPING_MALLS = re.compile(
+    r"GS\s*SHOP|GS샵|GS홈쇼핑|CJ\s*온스타일|CJ\s*ON\s*STYLE|CJ오쇼핑|현대\s*H\s*mall|현대홈쇼핑|Hmall|롯데홈쇼핑|롯데아이몰|"
+    r"NS\s*홈쇼핑|NS몰|홈앤쇼핑|공영쇼핑|공영홈쇼핑|KT\s*알파|K쇼핑|SK\s*스토아|신세계라이브쇼핑|신세계쇼핑|쇼핑엔티|W쇼핑|더블유쇼핑",
+    re.I,
+)
+
+
+def is_home_shopping(mall: str | None) -> bool:
+    return bool(mall and HOME_SHOPPING_MALLS.search(mall))
+
 
 @dataclass
 class Offer:
@@ -50,6 +61,7 @@ class ProviderResult:
 # ------------------------------------------------------------------ 네이버
 
 _B_TAG = re.compile(r"</?b>")
+_HTML_TAG = re.compile(r"<[^>]+>")
 
 
 def parse_naver(payload: dict[str, Any]) -> list[Offer]:
@@ -73,6 +85,7 @@ def parse_naver(payload: dict[str, Any]) -> list[Offer]:
                 image=it.get("image"),
                 product_ref=str(it.get("productId") or ""),
                 is_overseas=bool(mall and re.search(r"알리|aliexpress|해외", mall, re.I)),
+                extra={"home_shopping": is_home_shopping(mall)},
             )
         )
     return offers
@@ -123,7 +136,7 @@ def parse_danawa(html: str) -> list[Offer]:
             Offer(
                 provider="danawa",
                 provider_name="다나와",
-                title=p["productName"],
+                title=_HTML_TAG.sub("", p["productName"]),
                 price=price,
                 url=p.get("linkUrl") or f"https://prod.danawa.com/info/?pcode={p.get('productSeq')}",
                 mall=f"다나와 최저가({p.get('shopCount') or '?'}개 몰)",

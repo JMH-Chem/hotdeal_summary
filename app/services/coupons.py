@@ -213,11 +213,18 @@ def save_coupons(conn: sqlite3.Connection, coupons: list[CouponCandidate], sourc
                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
                ON CONFLICT(platform, code) DO UPDATE SET
                  last_seen=excluded.last_seen,
-                 discount_amount=COALESCE(coupons.discount_amount, excluded.discount_amount),
+                 -- 새 글이 '최소주문+할인액'을 모두 갖춘(더 완전한) 정보면 금액/통화/출처를 통째로 교체해 섞임 방지
+                 discount_amount=CASE WHEN {better} THEN excluded.discount_amount
+                                      ELSE COALESCE(coupons.discount_amount, excluded.discount_amount) END,
+                 currency=CASE WHEN {better} THEN excluded.currency ELSE coupons.currency END,
+                 min_spend=CASE WHEN {better} THEN excluded.min_spend ELSE coupons.min_spend END,
+                 source_name=CASE WHEN {better} THEN excluded.source_name ELSE coupons.source_name END,
+                 source_url=CASE WHEN {better} THEN excluded.source_url ELSE coupons.source_url END,
+                 context=CASE WHEN {better} THEN excluded.context ELSE coupons.context END,
                  discount_percent=COALESCE(coupons.discount_percent, excluded.discount_percent),
-                 min_spend=COALESCE(coupons.min_spend, excluded.min_spend),
                  valid_until=COALESCE(coupons.valid_until, excluded.valid_until),
-                 event_slug=COALESCE(coupons.event_slug, excluded.event_slug)""",
+                 event_slug=COALESCE(coupons.event_slug, excluded.event_slug)""".format(
+                better="(coupons.min_spend IS NULL AND excluded.min_spend IS NOT NULL AND excluded.discount_amount IS NOT NULL)"),
             (c.platform, c.code, c.discount_amount, c.discount_percent, c.min_spend, c.currency, c.valid_until,
              c.source_name, source_url, c.context, c.event_slug, now, now),
         )
