@@ -313,9 +313,31 @@ async def search_aliexpress(client: httpx.AsyncClient, settings: Settings, query
     return ProviderResult("aliexpress", "알리익스프레스", parse_ali_products(payload, settings.usd_krw), search_url=link)
 
 
+_OG_TITLE = re.compile(r'<meta property="og:title" content="([^"]+)"')
+
+
+async def aliexpress_product_web(client: httpx.AsyncClient, product_id: str) -> Offer | None:
+    """키 없이 상품 가격 조회: 상품 페이지의 og:title로 다시 검색해 같은 상품ID를 찾는다."""
+    resp = await client.get(f"https://ko.aliexpress.com/item/{product_id}.html",
+                            headers={"Cookie": f"aep_usuc_f={ALI_KR_COOKIE}"})
+    resp.raise_for_status()
+    m = _OG_TITLE.search(resp.text)
+    if not m:
+        return None
+    title = re.sub(r"\s*-\s*AliExpress.*$", "", m.group(1)).strip()
+    words = re.sub(r"[,()/\[\]]", " ", title).split()
+    for n in (8, 5, 12):
+        if not words:
+            break
+        for offer in await search_aliexpress_web(client, " ".join(words[:n])):
+            if offer.product_ref == product_id:
+                return offer
+    return None
+
+
 async def aliexpress_product(client: httpx.AsyncClient, settings: Settings, product_id: str) -> Offer | None:
     if not settings.ali_enabled:
-        raise RuntimeError("ALI_APP_KEY/SECRET 미설정")
+        return await aliexpress_product_web(client, product_id)
     payload = await ali_call(client, settings, "aliexpress.affiliate.productdetail.get", {
         "product_ids": product_id,
         "target_currency": "KRW",

@@ -11,7 +11,7 @@
     <input name="target_price" placeholder="목표가(원) — 이하가 되면 알림">
     <input name="drop_percent" placeholder="직전 대비 N% 이상 하락 시 알림 (예: 10)">
     <button>추적 시작</button>
-    <p class="muted small">검색어는 네이버·다나와·알리 중 최저 실구매가를 추적합니다.{% if not ali_enabled %} 알리 URL 추적은 ALI_APP_KEY 설정이 필요합니다.{% endif %}</p>
+    <p class="muted small">검색어는 네이버·다나와·알리 중 최저 실구매가를, 알리 상품 URL(…/item/번호.html)은 그 상품의 표시가를 추적합니다.{% if not ali_enabled %} (알리 API 키가 없어 한국 검색 페이지 데이터로 조회 중){% endif %}</p>
   </form>
   <form class="card form" method="post" action="/alerts/keywords">
     <h3>핫딜 키워드 알림</h3>

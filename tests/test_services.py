@@ -117,3 +117,26 @@ def test_save_coupons_prefers_complete_info():
     row = conn.execute("SELECT * FROM coupons").fetchone()
     assert (row["discount_amount"], row["min_spend"], row["currency"], row["source_url"]) == (4, 27, "USD", "https://b")
     assert row["event_slug"] == "aliexpress-1111-2026"
+
+
+def test_aliexpress_product_web_finds_same_id(monkeypatch):
+    import asyncio
+
+    import httpx
+
+    from app.sources.shopping import aliexpress_product_web
+
+    search_html = (FIX / "aliexpress_search.html").read_text(encoding="utf-8")
+    pid = "1005013363065046"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if "/item/" in request.url.path:
+            return httpx.Response(200, text=f'<meta property="og:title" content="990 PRO M.2 2280 NVMe SSD - AliExpress" />')
+        return httpx.Response(200, text=search_html)
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            return await aliexpress_product_web(client, pid)
+
+    offer = asyncio.run(run())
+    assert offer is not None and offer.product_ref == pid and offer.price > 0
