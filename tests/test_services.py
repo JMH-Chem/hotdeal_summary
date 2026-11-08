@@ -170,3 +170,58 @@ def test_extract_coupons_conditions_after_code_and_youtuber():
         ("KR1111", 15000, 100000), ("KR2222", 30000, 200000)]
     km = extract_coupons("[알리] 테크몽 구독자 코드 TECHMONG8 입력하면 ₩60,000 이상 ₩8,000 할인", now=NOW)
     assert (km[0].platform, km[0].discount_amount, km[0].min_spend, km[0].source_name) == ("AliExpress", 8000, 60000, "테크몽")
+
+
+def test_notify_sends_to_telegram_and_discord(monkeypatch):
+    import asyncio
+    import json
+
+    import httpx
+
+    from app.db import connect, init_db
+    from app.services.notify import notify
+
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "123:abc")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "42")
+    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/1/x")
+    sent = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append((request.url.host, request.url.path, json.loads(request.content)))
+        return httpx.Response(200, json={"ok": True})
+
+    conn = connect(":memory:")
+    init_db(conn)
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            await notify(conn, "가격알림", "RTX 5070", "목표가 도달", "https://x", client)
+
+    asyncio.run(run())
+    assert sent[0][0] == "api.telegram.org" and sent[0][1] == "/bot123:abc/sendMessage"
+    assert sent[0][2]["chat_id"] == "42" and "RTX 5070" in sent[0][2]["text"]
+    assert sent[1][0] == "discord.com" and "목표가 도달" in sent[1][2]["content"]
+    assert conn.execute("SELECT COUNT(*) FROM notifications").fetchone()[0] == 1
+
+
+def test_record_price_triggers_alert(monkeypatch):
+    import asyncio
+
+    from app.db import connect, init_db
+    from app.services.tracker import PriceReading, add_item, record_price
+
+    monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+    conn = connect(":memory:")
+    init_db(conn)
+    item_id = add_item(conn, name="햇반", kind="query", query="햇반", target_price=60000, drop_percent=10)
+
+    def row():
+        return conn.execute("SELECT * FROM tracked_items WHERE id=?", (item_id,)).fetchone()
+
+    assert asyncio.run(record_price(conn, row(), PriceReading(70000, "쿠팡", "naver", "https://a"))) == []
+    reasons = asyncio.run(record_price(conn, row(), PriceReading(59000, "G마켓", "naver", "https://b")))
+    assert any("목표가" in r for r in reasons) and any("하락" in r for r in reasons)
+    it = row()
+    assert (it["last_price"], it["lowest_price"], it["highest_price"]) == (59000, 59000, 70000)
+    assert conn.execute("SELECT COUNT(*) FROM notifications").fetchone()[0] == len(reasons)
