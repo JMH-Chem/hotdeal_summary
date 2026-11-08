@@ -156,7 +156,8 @@ def deal_search_query(title: str, max_words: int = 6) -> str:
     text = _MALL_RE.sub("", title)
     text = _PAREN_RE.sub(" ", text)
     text = re.sub(r"[\d,]+\s*(?:원|만원)|\$\s*[\d.,]+|무료배송|무배|/\s*\S*배송", " ", text)
-    words = [w for w in re.split(r"\s+", text) if w and w not in {"/", "-", "+"}]
+    words = [w.strip(",.;:/+-") for w in re.split(r"\s+", text)]
+    words = [w for w in words if w and not re.fullmatch(r"[\W_]+", w)]
     return " ".join(words[:max_words])
 
 

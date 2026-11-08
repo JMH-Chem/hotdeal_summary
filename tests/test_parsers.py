@@ -117,3 +117,9 @@ def test_deal_search_query():
 
     assert deal_search_query("[CJ더마켓] 햇반 210g x 72개 (67,684원/무배)") == "햇반 210g x 72개"
     assert deal_search_query("[일마존] Audio Technica ATH-M50xGM /16만원") == "Audio Technica ATH-M50xGM"
+
+
+def test_deal_search_query_strips_punctuation():
+    from app.parsing import deal_search_query
+
+    assert deal_search_query("[특가] NiPoGi AMD 라이젠7 미니 PC ($372), 빅미 B6") == "NiPoGi AMD 라이젠7 미니 PC 빅미"
