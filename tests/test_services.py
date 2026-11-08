@@ -159,3 +159,14 @@ def test_polite_wait_spaces_same_host(monkeypatch):
         return time.monotonic() - start
 
     assert asyncio.run(run()) >= 0.55
+
+
+def test_extract_coupons_conditions_after_code_and_youtuber():
+    yt = extract_coupons("유튜버 잇섭 전용 할인코드 ITSUB11 : $50 이상 구매시 $6 할인 (~11/18)", now=NOW)
+    assert [(c.code, c.discount_amount, c.min_spend, c.currency, c.valid_until, c.source_name) for c in yt] == [
+        ("ITSUB11", 6, 50, "USD", "2026-11-18", "잇섭")]
+    multi = extract_coupons("광군제 쿠폰 정리: 코드 KR1111 (15,000/100,000), 코드 KR2222 (30,000/200,000)", now=NOW)
+    assert [(c.code, c.discount_amount, c.min_spend) for c in multi] == [
+        ("KR1111", 15000, 100000), ("KR2222", 30000, 200000)]
+    km = extract_coupons("[알리] 테크몽 구독자 코드 TECHMONG8 입력하면 ₩60,000 이상 ₩8,000 할인", now=NOW)
+    assert (km[0].platform, km[0].discount_amount, km[0].min_spend, km[0].source_name) == ("AliExpress", 8000, 60000, "테크몽")

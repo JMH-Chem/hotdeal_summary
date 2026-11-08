@@ -46,7 +46,7 @@ _MODEL_LIKE = re.compile(r"^(RTX|GTX|RX|SM|DDR|PCIE|USB|IP|GT|MX|ZEN|M\d|A\d{2}|
 _AMOUNT = r"(\d{1,3}(?:,\d{3})+|\d+)\s*(만)?\s*(?:원|₩|달러|불|USD)?"
 _MIN_SPEND_RE = re.compile(r"(?:₩|\$|US\s*\$)?\s*" + _AMOUNT + r"\s*(?:이상|↑|over)", re.I)
 _DISCOUNT_RE = re.compile(r"(?:₩|\$|US\s*\$)?\s*" + _AMOUNT + r"\s*(?:할인|off|DC|즉시)", re.I)
-_PAIR_RE = re.compile(r"(\d{1,3}(?:,\d{3})+|\d+)\s*/\s*(\d{1,3}(?:,\d{3})+|\d+)")  # 15,000/100,000
+_PAIR_RE = re.compile(r"\$?(\d{1,3}(?:,\d{3})+|\d{3,})\s*/\s*\$?(\d{1,3}(?:,\d{3})+|\d{3,})")  # 15,000/100,000
 _PERCENT_RE = re.compile(r"(\d{1,2})\s*%\s*(?:할인|off|쿠폰)", re.I)
 _UNTIL_RE = re.compile(r"(?:~|까지|until)\s*(\d{1,2})\s*[./월]\s*(\d{1,2})|(\d{1,2})\s*[./월]\s*(\d{1,2})\s*일?\s*(?:까지|마감)")
 _YOUTUBER_RE = re.compile(r"(?:유튜버|유튜브)\s*[\"'「]?([가-힣A-Za-z0-9_.]{2,20})|([가-힣A-Za-z0-9_.]{2,20})\s*(?:전용|단독|구독자)\s*(?:코드|쿠폰|할인)")
@@ -132,6 +132,38 @@ def _parse_until(m: re.Match[str], now: datetime) -> str | None:
         return None
 
 
+def _amounts(after: str, before: str) -> tuple[int | None, int | None, str]:
+    """(할인액, 최소주문, 통화). 코드 뒤 조건 → 코드 앞 조건 순으로 본다."""
+    for region, use_tail in ((after, False), (before, True)):
+        if not region.strip():
+            continue
+        currency = "USD" if re.search(r"\$|달러|USD", region) else "KRW"
+        amount = min_spend = None
+        pair = _PAIR_RE.search(region)
+        mm = _MIN_SPEND_RE.search(region)
+        if mm:
+            min_spend = _to_int(mm.group(1), mm.group(2))
+        if use_tail:
+            tails = list(_AMOUNT_TAIL.finditer(region))
+            if tails:
+                t = tails[-1]
+                amount = int(round(float(t.group(1)))) if t.group(1) else _to_int(t.group(2), t.group(3))
+                if min_spend is not None and amount == min_spend and len(tails) == 1:
+                    amount = None
+        if amount is None:
+            dm = _DISCOUNT_RE.search(region)
+            if dm:
+                amount = _to_int(dm.group(1), dm.group(2))
+        if pair and amount is None and min_spend is None:
+            a, b = (int(x.replace(",", "")) for x in pair.groups())
+            amount, min_spend = min(a, b), max(a, b)
+        if amount is not None or min_spend is not None:
+            if min_spend is not None and amount is not None and amount > min_spend:
+                amount, min_spend = min_spend, amount
+            return amount, min_spend, currency
+    return None, None, "USD" if re.search(r"\$|달러|USD", after + before) else "KRW"
+
+
 def extract_coupons(text: str, *, default_platform: str | None = None, source_name: str | None = None,
                     title: str | None = None, event_slug: str | None = None, event_end: str | None = None,
                     now: datetime | None = None) -> list[CouponCandidate]:
@@ -150,39 +182,25 @@ def extract_coupons(text: str, *, default_platform: str | None = None, source_na
     for i, seg in enumerate(segs):
         window = " ".join(segs[max(0, i - 1): i + 2])
         prev_end = -100
-        for m in _TOKEN.finditer(seg):
+        prev_cand: CouponCandidate | None = None
+        matches = [m for m in _TOKEN.finditer(seg) if _is_code(m.group(1))]
+        for idx, m in enumerate(matches):
             tok = m.group(1)
-            if not _is_code(tok) or tok in results or _in_title_as_model(tok, title):
+            if tok in results or _in_title_as_model(tok, title):
                 continue
+            listed = prev_end >= 0 and m.start() - prev_end <= 6
             if not _code_in_context(tok, seg, m.start(), prev_end):
                 continue
+            nxt = matches[idx + 1].start() if idx + 1 < len(matches) else len(seg)
+            after = seg[m.end(): min(nxt, m.end() + 60)]
+            before = seg[max(0, m.start() - 40, prev_end if prev_end >= 0 else 0): m.start()]
             prev_end = m.end()
-            before = seg[max(0, m.start() - 40): m.start()]
-            line = seg[: m.start()]
-            amount = percent = min_spend = None
-            currency = "USD" if re.search(r"\$|달러|USD", line or seg) else "KRW"
-            tails = list(_AMOUNT_TAIL.finditer(before))
-            mm = _MIN_SPEND_RE.search(line) or _MIN_SPEND_RE.search(seg)
-            if mm:
-                min_spend = _to_int(mm.group(1), mm.group(2))
-            if tails:
-                t = tails[-1]
-                amount = int(round(float(t.group(1)))) if t.group(1) else _to_int(t.group(2), t.group(3))
-                if min_spend is not None and amount == min_spend and len(tails) == 1:
-                    amount = None
-            if amount is None:
-                dm = _DISCOUNT_RE.search(line) or _DISCOUNT_RE.search(seg)
-                if dm:
-                    amount = _to_int(dm.group(1), dm.group(2))
-            pair = _PAIR_RE.search(seg)
-            if pair and amount is None and min_spend is None:
-                a, b = (int(x.replace(",", "")) for x in pair.groups())
-                amount, min_spend = min(a, b), max(a, b)
-            pm = _PERCENT_RE.search(seg)
-            if pm:
-                percent = int(pm.group(1))
-            if min_spend is not None and amount is not None and amount > min_spend:
-                amount, min_spend = min_spend, amount
+            amount, min_spend, currency = _amounts(after, before)
+            pm = _PERCENT_RE.search(after) or _PERCENT_RE.search(before)
+            percent = int(pm.group(1)) if pm else None
+            if listed and prev_cand and amount is None and min_spend is None and percent is None:
+                amount, min_spend, currency, percent = (prev_cand.discount_amount, prev_cand.min_spend,
+                                                        prev_cand.currency, prev_cand.discount_percent)
             um = _UNTIL_RE.search(window) or (doc_until[-1] if doc_until else None)
             valid_until = _parse_until(um, now) if um else None
             ev = detect_event(window) or whole_event
@@ -200,6 +218,7 @@ def extract_coupons(text: str, *, default_platform: str | None = None, source_na
                 context=seg[:160],
                 event_slug=ev,
             )
+            prev_cand = results[tok]
     return list(results.values())
 
 
