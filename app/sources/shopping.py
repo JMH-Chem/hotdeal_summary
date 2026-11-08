@@ -62,6 +62,7 @@ class ProviderResult:
 
 _B_TAG = re.compile(r"</?b>")
 _HTML_TAG = re.compile(r"<[^>]+>")
+_OVERSEAS_TITLE = re.compile(r"해외구매|해외직구|\[해외\]|구매대행")
 
 
 def parse_naver(payload: dict[str, Any]) -> list[Offer]:
@@ -132,11 +133,13 @@ def parse_danawa(html: str) -> list[Offer]:
             continue
         if price <= 0 or not p.get("productName"):
             continue
+        title = _HTML_TAG.sub("", p["productName"])
         offers.append(
             Offer(
                 provider="danawa",
                 provider_name="다나와",
-                title=_HTML_TAG.sub("", p["productName"]),
+                title=title,
+                is_overseas=bool(_OVERSEAS_TITLE.search(title)),
                 price=price,
                 url=p.get("linkUrl") or f"https://prod.danawa.com/info/?pcode={p.get('productSeq')}",
                 mall=f"다나와 최저가({p.get('shopCount') or '?'}개 몰)",

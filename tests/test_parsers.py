@@ -103,3 +103,10 @@ def test_source_fetch_retries_transient_error():
             return await SOURCE_MAP["ppomppu"].fetch(client)
 
     assert len(asyncio.run(run())) >= 10 and calls["n"] == 2
+
+
+def test_danawa_overseas_flag():
+    from app.sources.shopping import _OVERSEAS_TITLE
+
+    assert _OVERSEAS_TITLE.search("Western Digital WD BLACK SN850X M.2 NVMe 해외구매")
+    assert not _OVERSEAS_TITLE.search("Western Digital WD BLACK SN850X M.2 NVMe")

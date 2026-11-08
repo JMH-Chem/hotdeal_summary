@@ -56,7 +56,8 @@ def rank_offers(query: str, offers: list[Offer], settings: Settings, category: s
         o.extra["relevance"] = round(relevance(query, o.title), 2)
         if o.extra["relevance"] < min_relevance:
             continue
-        if o.is_overseas:
+        # 다나와 '해외구매' 가격은 판매처가 세금 포함/별도를 다르게 표기하므로 추정치를 더하지 않는다
+        if o.is_overseas and o.provider != "danawa":
             est = estimate_import_tax(o.price, o.shipping or 0, settings.usd_krw, category=category)
             o.extra["tax"] = est
             o.extra["landed_price"] = est.landed_price
