@@ -20,7 +20,7 @@ from .parsing import KST, deal_search_query, format_won, to_kst_str
 from .services.collector import collect_all
 from .services.compare import compare, landed_price
 from .services.customs import DUTY_RATES
-from .services.events import load_events, related_coupons, related_deals
+from .services.events import load_events, related_coupons, related_deals, trending_events
 from .services.tracker import add_item, check_all, check_item
 from .sources.community import SOURCES
 from .sources.shopping import aliexpress_product_id
@@ -178,9 +178,10 @@ def events_page(request: Request):
     try:
         events = load_events()
         blocks = [(e, related_coupons(conn, e), related_deals(conn, e, 12)) for e in events]
+        trending = trending_events(conn)
     finally:
         conn.close()
-    return render(request, "events.html", blocks=blocks)
+    return render(request, "events.html", blocks=blocks, trending=trending)
 
 
 # ------------------------------------------------------------------ 가격비교

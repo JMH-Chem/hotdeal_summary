@@ -225,3 +225,23 @@ def test_record_price_triggers_alert(monkeypatch):
     it = row()
     assert (it["last_price"], it["lowest_price"], it["highest_price"]) == (59000, 59000, 70000)
     assert conn.execute("SELECT COUNT(*) FROM notifications").fetchone()[0] == len(reasons)
+
+
+def test_trending_events_counts_recent_mentions():
+    from datetime import timezone
+
+    from app.db import connect, init_db
+    from app.services.events import trending_events
+
+    conn = connect(":memory:")
+    init_db(conn)
+    now = datetime(2026, 11, 9, tzinfo=timezone.utc)
+    rows = [("1", "[알리] 광군제 특가 SSD", "2026-11-08T10:00:00+00:00"),
+            ("2", "[11번가] 십일절 에어팟", "2026-11-07T10:00:00+00:00"),
+            ("3", "[알리] 11.11 쿠폰", "2026-11-06T10:00:00+00:00"),
+            ("4", "[G마켓] 블프 미리", "2026-10-01T10:00:00+00:00")]  # 7일 이전 → 제외
+    for ext, title, posted in rows:
+        conn.execute("INSERT INTO deals (source, external_id, title, url, posted_at, collected_at) VALUES (?,?,?,?,?,?)",
+                     ("t", ext, title, "https://x/" + ext, posted, posted))
+    trend = {t.name: t.count for t in trending_events(conn, now=now)}
+    assert trend == {"광군제 (11.11)": 2, "11번가 십일절": 1}

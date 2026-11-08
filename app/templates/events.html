@@ -3,6 +3,14 @@
 {% block content %}
 <h1>📅 쇼핑 행사 캘린더</h1>
 <p class="muted">행사 일정은 <code>data/events.json</code>에서 관리합니다. "예상" 표시는 공식 공지 확인 전 일정입니다. 관련 핫딜·쿠폰은 커뮤니티 글에서 자동 연결됩니다.</p>
+{% if trending %}
+<section class="card">
+  <h3>🔥 커뮤니티 화제 행사 <span class="muted small">최근 7일 핫딜 제목 언급 수</span></h3>
+  <div class="providers">
+    {% for t in trending %}<a class="chip upcoming" href="/?q={{ t.query | urlencode }}">{{ t.name }} · {{ t.count }}건</a>{% endfor %}
+  </div>
+</section>
+{% endif %}
 {% for e, coupons, deals in blocks %}
 <section class="card event" id="{{ e.slug }}">
   <div class="event-head">
