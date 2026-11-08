@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}최저가 비교 · 핫딜요약{% endblock %}
+{% block content %}
+<h1>💸 최저가 비교 <small class="muted">국내몰 + 알리익스프레스</small></h1>
+<form class="filters" method="get">
+  <input type="search" name="q" value="{{ q }}" placeholder="상품명 (예: 에어팟 프로 2, RTX 5070)" autofocus>
+  <select name="category" title="알리 관부가세 추정용 품목">
+    {% for key, (rate, label) in categories.items() %}<option value="{{ key }}" {{ 'selected' if key == category }}>{{ label }}</option>{% endfor %}
+  </select>
+  <button>비교</button>
+</form>
+{% if result %}
+  <div class="providers">
+  {% for p in result.providers %}
+    <span class="chip {{ 'ok' if p.ok else 'warn' }}">{{ p.provider_name }}: {% if p.ok %}{{ p.offers|length }}건{% else %}{{ p.message }}{% endif %}</span>
+    {% if not p.ok and p.search_url %}<a class="mini" href="{{ p.search_url }}" target="_blank" rel="noopener">{{ p.provider_name }}에서 직접 검색 ↗</a>{% endif %}
+  {% endfor %}
+  </div>
+  {% if result.cheapest %}
+  <div class="summary-cards">
+    <div class="card hl"><div class="muted">전체 최저 (실구매가)</div><div class="big">{{ landed(result.cheapest) | won }}</div><div>{{ result.cheapest.provider_name }} · {{ result.cheapest.mall or '' }}</div></div>
+    {% if result.cheapest_domestic %}<div class="card"><div class="muted">국내 최저</div><div class="big">{{ landed(result.cheapest_domestic) | won }}</div><div>{{ result.cheapest_domestic.mall or result.cheapest_domestic.provider_name }}</div></div>{% endif %}
+    {% if result.cheapest_overseas %}<div class="card"><div class="muted">알리/해외 최저 (관부가세 추정 포함)</div><div class="big">{{ landed(result.cheapest_overseas) | won }}</div><div>{{ result.cheapest_overseas.mall or '' }}</div></div>{% endif %}
+  </div>
+  {% endif %}
+  <form method="post" action="/track" class="inline-track">
+    <input type="hidden" name="target" value="{{ q }}">
+    <input type="hidden" name="name" value="{{ q }}">
+    <input name="target_price" placeholder="목표가(원) — 선택">
+    <input name="drop_percent" placeholder="하락 알림 % — 선택" size="10">
+    <button>📈 '{{ q }}' 최저가 추적하기</button>
+  </form>
+  <table class="table">
+    <thead><tr><th></th><th>상품</th><th>판매처</th><th>가격</th><th>실구매가</th></tr></thead>
+    <tbody>
+    {% for o in result.offers %}
+      <tr class="{{ 'best' if loop.first }}">
+        <td>{% if o.image %}<img class="thumb" src="{{ o.image }}" alt="" loading="lazy" referrerpolicy="no-referrer">{% endif %}</td>
+        <td><a href="{{ o.url }}" target="_blank" rel="noopener nofollow">{{ o.title }}</a>
+          {% if o.is_overseas %}<span class="chip ali">해외직구</span>{% endif %}</td>
+        <td>{{ o.provider_name }}<div class="muted small">{{ o.mall or '' }}</div></td>
+        <td>{{ o.price | won }}{% if o.shipping %}<div class="muted small">+배송 {{ o.shipping | won }}</div>{% endif %}</td>
+        <td><b>{{ landed(o) | won }}</b>
+          {% set tax = o.extra.get('tax') %}
+          {% if tax %}<div class="muted small">{% if tax.taxable and tax.total_tax %}관부가세 약 {{ tax.total_tax | won }} (${{ tax.item_usd }} &gt; ${{ tax.limit_usd }}){% elif tax.taxable %}과세 대상이나 세액 1만원 미만{% else %}면세 (${{ tax.item_usd }} ≤ ${{ tax.limit_usd }}){% endif %}</div>{% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" class="empty">결과가 없습니다. 검색어를 바꾸거나 API 키 설정을 확인하세요.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="muted small">실구매가 = 가격 + 배송비 (+ 해외직구는 관부가세 추정치, 기준환율 {{ settings.usd_krw | int }}원/USD). 쿠폰·카드 할인은 반영되지 않습니다 → <a href="/coupons">쿠폰 보기</a></p>
+{% else %}
+  <div class="card">
+    <p>검색어를 입력하면 <b>네이버쇼핑(API)</b>, <b>다나와</b>, <b>알리익스프레스(Affiliate API)</b>를 동시에 조회해 실구매가 기준으로 정렬합니다.</p>
+    <p class="muted">알리 상품은 면세한도(USD 150) 초과 시 관세·부가세 추정치를 더해 국내가와 공정하게 비교합니다.</p>
+  </div>
+{% endif %}
+{% endblock %}

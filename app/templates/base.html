@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}핫딜 요약{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">🔥 핫딜요약</a>
+  <nav>
+    <a href="/" class="{{ 'on' if request.url.path == '/' }}">핫딜</a>
+    <a href="/compare" class="{{ 'on' if request.url.path.startswith('/compare') }}">최저가 비교</a>
+    <a href="/track" class="{{ 'on' if request.url.path.startswith('/track') }}">가격 추적</a>
+    <a href="/events" class="{{ 'on' if request.url.path.startswith('/events') }}">행사</a>
+    <a href="/coupons" class="{{ 'on' if request.url.path.startswith('/coupons') }}">쿠폰</a>
+    <a href="/notifications" class="{{ 'on' if request.url.path.startswith('/notifications') }}">알림{% if unread %} <b class="badge">{{ unread }}</b>{% endif %}</a>
+  </nav>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>
+  커뮤니티 글은 제목·가격·링크만 표시하며 원문은 각 사이트에 있습니다. 가격·쿠폰·관부가세는 참고용입니다. · <a href="/status">수집 상태</a>
+</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

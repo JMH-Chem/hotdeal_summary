@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}쇼핑 행사 · 핫딜요약{% endblock %}
+{% block content %}
+<h1>📅 쇼핑 행사 캘린더</h1>
+<p class="muted">행사 일정은 <code>data/events.json</code>에서 관리합니다. "예상" 표시는 공식 공지 확인 전 일정입니다. 관련 핫딜·쿠폰은 커뮤니티 글에서 자동 연결됩니다.</p>
+{% for e, coupons, deals in blocks %}
+<section class="card event" id="{{ e.slug }}">
+  <div class="event-head">
+    <h2>{{ e.name }}</h2>
+    <span class="chip {{ e.status() }}">{{ e.status_label() }}</span>
+    {% if not e.verified %}<span class="chip warn">예상 일정</span>{% endif %}
+  </div>
+  <p>
+    <b>{{ e.platform }}</b> ·
+    {% if e.pre_start %}예열 {{ e.pre_start.strftime('%m/%d') }} · {% endif %}
+    {{ e.start.strftime('%Y-%m-%d %H:%M') }} ~ {{ e.end.strftime('%m-%d %H:%M') }} (KST)
+    {% if e.url %} · <a href="{{ e.url }}" target="_blank" rel="noopener">행사 페이지</a>{% endif %}
+  </p>
+  {% if e.highlights %}<ul>{% for h in e.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+  <p class="muted small">출처: {% if e.source_url %}<a href="{{ e.source_url }}" target="_blank" rel="noopener">{{ e.source }}</a>{% else %}{{ e.source }}{% endif %}</p>
+  {% if coupons %}
+  <h3>이 행사에서 쓸 수 있는 코드</h3>
+  <div class="code-grid">
+    {% for c in coupons %}
+      <div class="code-card">
+        <button class="code" data-copy="{{ c.code }}">{{ c.code }}</button>
+        <div>{% if c.min_spend %}{% if c.currency == 'USD' %}${{ c.min_spend }}{% else %}{{ c.min_spend | won }}{% endif %}↑ {% endif %}{% if c.discount_amount %}{% if c.currency == 'USD' %}${{ c.discount_amount }}{% else %}{{ c.discount_amount | won }}{% endif %} 할인{% endif %}</div>
+        <div class="muted small">{{ c.source_name or '' }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if deals %}
+  <h3>관련 핫딜</h3>
+  <ul class="deals compact">
+    {% for d in deals %}<li><span class="chip src">{{ d.source_name }}</span> <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a> <span class="muted">{{ d.posted_at | kst }}</span></li>{% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}

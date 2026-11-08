@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "_spark.html" import spark %}
+{% block title %}가격 추적 · 핫딜요약{% endblock %}
+{% block content %}
+<h1>📈 가격 추적 & 알림</h1>
+<div class="two-col">
+  <form class="card form" method="post" action="/track">
+    <h3>상품 추적 추가</h3>
+    <input name="target" placeholder="검색어 (예: 햇반 210g 36개) 또는 알리 상품 URL" required>
+    <input name="name" placeholder="표시 이름 (선택)">
+    <input name="target_price" placeholder="목표가(원) — 이하가 되면 알림">
+    <input name="drop_percent" placeholder="직전 대비 N% 이상 하락 시 알림 (예: 10)">
+    <button>추적 시작</button>
+    <p class="muted small">검색어는 네이버·다나와·알리 중 최저 실구매가를 추적합니다.{% if not ali_enabled %} 알리 URL 추적은 ALI_APP_KEY 설정이 필요합니다.{% endif %}</p>
+  </form>
+  <form class="card form" method="post" action="/alerts/keywords">
+    <h3>핫딜 키워드 알림</h3>
+    <input name="keyword" placeholder="키워드 (예: 햇반, 4070 super)" required>
+    <input name="max_price" placeholder="최대 가격(원) — 선택">
+    <button>키워드 등록</button>
+    <ul class="kw">
+      {% for k in keywords %}
+        <li>{{ k.keyword }}{% if k.max_price %} ≤ {{ k.max_price | won }}{% endif %}
+          <form method="post" action="/alerts/keywords/{{ k.id }}/delete" class="inline"><button class="link">삭제</button></form></li>
+      {% else %}<li class="muted">등록된 키워드 없음</li>{% endfor %}
+    </ul>
+  </form>
+</div>
+<table class="table">
+  <thead><tr><th>상품</th><th>현재가</th><th>최저/최고</th><th>목표</th><th>추이</th><th>확인</th></tr></thead>
+  <tbody>
+  {% for it in items %}
+    <tr>
+      <td><a href="/track/{{ it.id }}">{{ it.name }}</a> <span class="chip">{{ '알리' if it.kind == 'aliexpress' else '최저가' }}</span><div class="muted small">{{ it.last_mall or '' }}</div></td>
+      <td><b>{{ it.last_price | won }}</b></td>
+      <td>{{ it.lowest_price | won }} / {{ it.highest_price | won }}</td>
+      <td>{% if it.target_price %}{{ it.target_price | won }}{% endif %}{% if it.drop_percent %} · {{ it.drop_percent }}%↓{% endif %}</td>
+      <td>{{ spark(histories[it.id]) }}</td>
+      <td class="muted small">{{ it.last_checked | kst }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="empty">추적 중인 상품이 없습니다.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

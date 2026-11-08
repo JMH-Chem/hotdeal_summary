@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "aliexpress-1111-2026",
+    "name": "알리익스프레스 11.11 광군제",
+    "platform": "AliExpress",
+    "pre_start": "2026-10-29T00:00:00+09:00",
+    "start": "2026-11-01T00:00:00+09:00",
+    "end": "2026-11-18T23:59:59+09:00",
+    "url": "https://www.aliexpress.com/ssr/300001014/KR1101-mainvenue",
+    "keywords": ["광군제", "11.11", "1111"],
+    "verified": true,
+    "source": "알리익스프레스 공식 안내글 (클리앙 알뜰구매, 2026-10-29)",
+    "source_url": "https://www.clien.net/service/board/jirum/19284292",
+    "highlights": [
+      "할인코드: $27↑ $4 KBTY04 · $58↑ $8 KBTY08 · $98↑ $13 KBTY13 · $148↑ $19 KBTY19 · $225↑ $28 KBTY28 · $375↑ $45 KBTY45",
+      "결제 즉시할인: 카카오페이·토스페이 ₩100,000↑ ₩8,000 / ₩160,000↑ ₩13,000(네이버페이 포함)",
+      "카드사 즉시할인: 해외직구 상품(KB VISA $150↑ $22 등) · 한국발송 상품(롯데/KB ₩40,000↑ ₩2,800 등)"
+    ]
+  },
+  {
+    "slug": "11st-grand-1111-2026",
+    "name": "11번가 그랜드 십일절",
+    "platform": "11번가",
+    "start": "2026-11-01T00:00:00+09:00",
+    "end": "2026-11-11T23:59:59+09:00",
+    "url": "https://www.11st.co.kr/",
+    "keywords": ["십일절", "11번가"],
+    "verified": false,
+    "source": "예년 일정 기준 예상 — 공식 공지 확인 필요",
+    "highlights": ["매년 11월 1~11일 전후 진행(예상)"]
+  },
+  {
+    "slug": "black-friday-2026",
+    "name": "블랙프라이데이",
+    "platform": "해외직구·국내몰 전반",
+    "start": "2026-11-27T00:00:00+09:00",
+    "end": "2026-11-27T23:59:59+09:00",
+    "url": null,
+    "keywords": ["블랙프라이데이", "블프", "black friday"],
+    "verified": true,
+    "source": "추수감사절(11월 넷째 목요일) 다음 날 — 각 몰 행사 기간은 상이",
+    "highlights": ["아마존/베스트바이 등 미국 직구: 면세한도 USD 200(목록통관)", "국내몰도 블프 기획전 동시 진행"]
+  },
+  {
+    "slug": "cyber-monday-2026",
+    "name": "사이버먼데이",
+    "platform": "해외직구 전반",
+    "start": "2026-11-30T00:00:00+09:00",
+    "end": "2026-11-30T23:59:59+09:00",
+    "url": null,
+    "keywords": ["사이버먼데이", "cyber monday"],
+    "verified": true,
+    "source": "블랙프라이데이 다음 월요일",
+    "highlights": []
+  },
+  {
+    "slug": "aliexpress-1212-2026",
+    "name": "알리익스프레스 12.12",
+    "platform": "AliExpress",
+    "start": "2026-12-12T00:00:00+09:00",
+    "end": "2026-12-12T23:59:59+09:00",
+    "url": null,
+    "keywords": ["12.12", "1212"],
+    "verified": false,
+    "source": "예년 일정 기준 예상 — 공식 공지 확인 필요",
+    "highlights": []
+  }
+]

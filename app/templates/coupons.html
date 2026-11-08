@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}쿠폰 코드 · 핫딜요약{% endblock %}
+{% block content %}
+<h1>🎟️ 쿠폰·프로모션 코드 모음</h1>
+<p class="muted">커뮤니티(뽐뿌 알리뽐뿌·쿠폰게시판, 클리앙, 루리웹 등) 글에서 자동 추출한 코드입니다. 유튜버/커뮤니티 전용 코드는 출처에 표시됩니다. 사용 전 조건을 원문에서 확인하세요.</p>
+<form class="filters" method="get">
+  <select name="platform">
+    <option value="">전체 플랫폼</option>
+    {% for p in platforms %}<option value="{{ p }}" {{ 'selected' if p == platform }}>{{ p }}</option>{% endfor %}
+  </select>
+  <select name="event">
+    <option value="">전체 행사</option>
+    {% for slug, e in events.items() %}<option value="{{ slug }}" {{ 'selected' if slug == event }}>{{ e.name }}</option>{% endfor %}
+  </select>
+  <button>필터</button>
+</form>
+<table class="table">
+  <thead><tr><th>코드</th><th>플랫폼</th><th>혜택</th><th>최소 주문</th><th>유효기간</th><th>행사</th><th>출처</th></tr></thead>
+  <tbody>
+  {% for c in coupons %}
+    <tr class="{{ 'expired' if c.valid_until and c.valid_until < today }}">
+      <td><button class="code" data-copy="{{ c.code }}" title="클릭해서 복사">{{ c.code }}</button></td>
+      <td>{{ c.platform }}</td>
+      <td>{% if c.discount_amount %}{% if c.currency == 'USD' %}${{ c.discount_amount }}{% else %}{{ c.discount_amount | won }}{% endif %}{% endif %}{% if c.discount_percent %} {{ c.discount_percent }}%{% endif %}{% if not c.discount_amount and not c.discount_percent %}<span class="muted">원문 참고</span>{% endif %}</td>
+      <td>{% if c.min_spend %}{% if c.currency == 'USD' %}${{ c.min_spend }}{% else %}{{ c.min_spend | won }}{% endif %} 이상{% else %}-{% endif %}</td>
+      <td>{{ c.valid_until or '-' }}{% if c.valid_until and c.valid_until < today %} <span class="chip ended">만료</span>{% endif %}</td>
+      <td>{% if c.event_slug and c.event_slug in events %}<a href="/events#{{ c.event_slug }}">{{ events[c.event_slug].name }}</a>{% else %}-{% endif %}</td>
+      <td><a href="{{ c.source_url }}" target="_blank" rel="noopener">{{ c.source_name or '원문' }}</a><div class="muted small">{{ c.context }}</div></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="empty">아직 추출된 코드가 없습니다.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2>쿠폰·코드 관련 최근 글</h2>
+<ul class="deals compact">
+{% for d in coupon_posts %}
+  <li><span class="chip src">{{ d.source_name }} · {{ d.board }}</span> <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a> <span class="muted">{{ d.posted_at | kst }}</span></li>
+{% else %}<li class="empty">없음</li>{% endfor %}
+</ul>
+{% endblock %}

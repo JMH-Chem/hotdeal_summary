@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="layout">
+<section class="main-col">
+  <form class="filters" method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="핫딜 검색 (예: 햇반, SSD, 에어팟)">
+    <select name="source">
+      <option value="">전체 커뮤니티</option>
+      {% for s in source_names %}<option value="{{ s }}" {{ 'selected' if s == source }}>{{ s }}</option>{% endfor %}
+    </select>
+    <label><input type="checkbox" name="ali" value="1" {{ 'checked' if ali }}> 알리만</label>
+    <label><input type="checkbox" name="coupon" value="1" {{ 'checked' if coupon }}> 쿠폰/코드</label>
+    <button>검색</button>
+  </form>
+  <p class="muted">총 {{ total }}건 수집 · 동일 딜은 묶어서 표시</p>
+  <ul class="deals">
+  {% for d in deals %}
+    <li class="deal">
+      <div class="deal-meta">
+        <span class="chip src">{{ d.source_name }} · {{ d.board }}</span>
+        {% if d.is_aliexpress %}<span class="chip ali">알리</span>{% endif %}
+        {% if d.is_coupon %}<span class="chip coupon">쿠폰</span>{% endif %}
+        {% if d.category %}<span class="chip">{{ d.category }}</span>{% endif %}
+        <span class="muted">{{ d.posted_at | kst }}</span>
+      </div>
+      <a class="deal-title" href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+      <div class="deal-sub">
+        {% if d.mall %}<span>🏬 {{ d.mall }}</span>{% endif %}
+        {% if d.price %}<span class="price">{% if d.currency == 'USD' %}${{ d.price }}{% else %}{{ d.price | won }}{% endif %}</span>{% endif %}
+        {% if d.shipping %}<span>🚚 {{ d.shipping }}</span>{% endif %}
+        {% if d.views %}<span class="muted">조회 {{ d.views }}</span>{% endif %}
+        {% if d.price and d.currency == 'KRW' %}<a class="mini" href="/compare?q={{ d.title | replace('[' ~ (d.mall or '') ~ ']', '') | truncate(40, True, '') | urlencode }}">최저가 비교</a>{% endif %}
+      </div>
+    </li>
+  {% else %}
+    <li class="empty">아직 수집된 핫딜이 없습니다. 잠시 후 새로고침하거나 <code>uv run python -m app.cli collect</code>를 실행하세요.</li>
+  {% endfor %}
+  </ul>
+  <div class="pager">
+    {% if page > 1 %}<a href="?q={{ q|urlencode }}&source={{ source|urlencode }}&ali={{ ali }}&coupon={{ coupon }}&page={{ page - 1 }}">← 이전</a>{% endif %}
+    {% if deals|length == page_size %}<a href="?q={{ q|urlencode }}&source={{ source|urlencode }}&ali={{ ali }}&coupon={{ coupon }}&page={{ page + 1 }}">다음 →</a>{% endif %}
+  </div>
+</section>
+<aside class="side-col">
+  <div class="card">
+    <h3>📅 진행/예정 행사</h3>
+    {% for e in events %}
+      <div class="event-mini">
+        <a href="/events#{{ e.slug }}"><b>{{ e.name }}</b></a>
+        <span class="chip {{ e.status() }}">{{ e.status_label() }}</span>
+      </div>
+    {% else %}<p class="muted">등록된 행사 없음</p>{% endfor %}
+  </div>
+  <div class="card">
+    <h3>🎟️ 최근 발견된 코드</h3>
+    {% for c in coupons %}
+      <div class="coupon-mini">
+        <button class="code" data-copy="{{ c.code }}">{{ c.code }}</button>
+        <span class="muted">{{ c.platform }}{% if c.discount_amount %} · {% if c.currency == 'USD' %}${{ c.discount_amount }}{% else %}{{ c.discount_amount | won }}{% endif %} 할인{% endif %}</span>
+      </div>
+    {% else %}<p class="muted">아직 없음</p>{% endfor %}
+    <a href="/coupons">전체 보기 →</a>
+  </div>
+  <div class="card">
+    <h3>🛰️ 수집 상태</h3>
+    {% for s in status %}
+      <div class="status-row"><span class="dot {{ 'ok' if s.ok else 'err' }}"></span>{{ s.source }} <span class="muted">{{ s.last_run | kst }}</span></div>
+    {% endfor %}
+  </div>
+</aside>
+</div>
+{% endblock %}

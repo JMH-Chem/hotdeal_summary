@@ -1,0 +1,2697 @@
+
+
+
+
+ 
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<title>클리앙 : 알뜰구매</title>
+	<meta name="description" content="" />
+	<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="unsafe-url">
+<meta name="viewport" content="width=1280" />
+<meta name="author" content="클리앙" />
+<meta name="apple-mobile-web-app-title" content="클리앙">
+
+<link rel="canonical" href="https://www.clien.net/service/board/jirum">
+
+<link rel="stylesheet" href="/service/css/b.clien-list.noto.css?261004v1.261004v1">
+
+
+<link rel="shortcut icon" href="/service/image/favicon.ico">
+
+<link rel=apple-touch-icon href="/service/image/icon180x180.png"/>
+
+<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "Organization",
+		"url": "https://www.clien.net/",
+		"logo": "https://www.clien.net/service/image/logo.png"
+	}
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F2FH9F05GB"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'G-F2FH9F05GB');
+</script>
+
+ 
+	
+<script async='async' src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'></script>
+<script>
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+
+    
+    googletag.cmd.push(function() {
+        googletag.defineSlot('/44950606/cs4-pc-list-top', [728, 90], 'div-pc-list-top').addService(googletag.pubads());
+        googletag.defineSlot('/44950606/cs4-pc-list-below', [728, 90], 'div-pc-list-below').addService(googletag.pubads());
+        googletag.defineSlot('/44950606/cs4-pc-side1', [300, 250], 'div-pc-side-1').addService(googletag.pubads());
+        googletag.defineSlot('/44950606/cs4-pc-side2', [300, 250], 'div-pc-side-2').addService(googletag.pubads());
+
+        googletag.setConfig({ targeting: { board: ["jirum"] } });
+        googletag.enableServices();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        googletag.cmd.push(function() {
+            googletag.display('div-pc-list-top');
+            googletag.display('div-pc-list-below');
+            googletag.display('div-pc-side-1');
+            googletag.display('div-pc-side-2');
+        });
+    });
+</script> 
+
+</head>
+
+<body >
+
+
+<div class="back-to-top" id="top"></div>
+<nav class="header_wrap">
+	<div class="nav_header" data-role="account-open">
+        <div class="nav_header_logo">
+                        <h1 class="header_logo">
+                <a href="/service/" title="클리앙홈 바로가기"><i class="icon-clien"></i><span class="blind">CLIEN</span></a>
+                <span id="eventImgLogo"></span>
+            </h1>
+            <a href="#div_content" class="skip_to">본문 바로가기</a>
+            <a href="#menuTop" class="skip_to">메뉴 바로가기</a>
+            <a href="javascript:;" class="skip_to text-large">보기설정</a>
+            <a href="javascript:;" class="skip_to button-dark">테마설정</a>
+            <div class="header_menu_center">
+	            <div class="header_menu">
+	                <a href="/service/group/clien_all" class="all_view" title="톺아보기 바로가기"><span class="txt">톺아보기</span></a>
+	            </div>
+	            <div class="search ad_banner" data-role="total-search">
+	                <button type="button" class="search_button" data-role="total-submit" title="검색하기"><span class="fa fa-search"></span></button>
+	                <input type="search" name="search" class="search_input" data-role="total-input-keyword" title="통합검색" placeholder="검색어를 입력하세요." />
+	            </div>
+            </div>
+		</div>
+		
+        <div class="header_setting_area ">
+<div class="board_option">
+    <div class="option_group">
+        <a href="javascript:;" class="text-large">
+                <i class="fa fa-text-width" title="화면크게보기"></i>
+        </a>
+        <a href="javascript:;" class="button-dark">
+                <i class="fa fa-adjust" title="다크모드"></i>
+        </a>
+    </div>
+
+</div>            <div class="btn_top_setting" id="set-more">
+                <i class="fa fa-television btn_set"></i>
+                <i class="fa fa-times btn_close"></i>
+            </div>
+		</div>	
+	</div>
+</nav>
+
+<Script>
+
+	var setEventDay = [{month:3, day:1, class:'kr', url:'/service/image/kflag.png', size:26}
+	, {month:4, day:16, class:'ribbon', url:'/service/image/ribbon.png', size:21} 	, {month:6, day:6, class:'kr', url:'/service/image/kflag.png', size:26} 
+	, {month:8, day:15, class:'kr', url:'/service/image/kflag.png', size:26} 	, {month:10, day:3, class:'kr', url:'/service/image/kflag.png', size:26} 
+	, {month:10, day:9, class:'han', url:'/service/image/han_clien_m.png', size:108}  
+	, {month:10, day:29, class:'ribbon', url:'/service/image/ribbon_b.png', size:21}]; 
+	
+	var eventNowDay = new Date(); 
+	var eventNowMonth = eventNowDay.getMonth() + 1; 
+	var eventNowDay = eventNowDay.getDate(); 
+	var eventIsVaild = false;
+	var eventLogoHtml = '';
+
+	setEventDay.forEach(function(value){
+
+		if(eventNowMonth == value.month && eventNowDay == value.day) {
+			if(value.class == 'han') {
+				eventLogoHtml = '<a href="/service" class="image_logo han" title="클리앙홈 바로가기"><img src="'+value.url+'" width="'+value.size+'px"></a>';
+			} else {
+				eventLogoHtml = '<span class="image_logo '+value.class+'"><img src="'+value.url+'" width="'+value.size+'px"></span>';
+			}
+			eventIsVaild = true;
+		};
+	});
+	
+
+	if(eventIsVaild) {
+		console.log(eventLogoHtml);
+		document.getElementById("eventImgLogo").innerHTML = eventLogoHtml;
+	};
+
+</script> 
+<div class="nav_container">
+	<div class="snb" id="menuTop">
+    <div class="snb_menu">
+        <div class="side_nav" id="menu-scroll">
+            <div class="side_menu_area">
+	                        
+	            <div class="navmenu open">
+    <a class="menu-title " id="com-more">
+        <span class="menu_over">커뮤니티</span>
+        <span class="fa fa-angle-down"></span>
+	</a>
+
+
+        <a class="menu-group all" href="/service/group/board_all">
+
+            <span class="fa fa-angle-down"></span>
+        <span class="menu_over" title="커뮤니티전체">커뮤니티전체</span>
+        
+        </a>
+
+
+        <a class="menu-group" href="/service/group/community">
+
+            <span class="icon-board" alt="C">C</span>
+        <span class="menu_over" title="모두의광장">모두의광장</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/park">
+
+            <span class="icon-board" alt="F">F</span>
+        <span class="menu_over" title="모두의공원">모두의공원</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/image">
+
+            <span class="icon-board" alt="I">I</span>
+        <span class="menu_over" title="사진게시판">사진게시판</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/kin">
+
+            <span class="icon-board" alt="Q">Q</span>
+        <span class="menu_over" title="아무거나질문">아무거나질문</span>
+        
+        </a>
+
+
+        <a class="menu-group" href="/service/group/allinfo">
+
+            <span class="icon-board" alt="D">D</span>
+        <span class="menu_over" title="정보와자료">정보와자료</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/news">
+
+            <span class="icon-board" alt="N">N</span>
+        <span class="menu_over" title="새로운소식">새로운소식</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/useful">
+
+            <span class="icon-board" alt="T">T</span>
+        <span class="menu_over" title="유용한사이트">유용한사이트</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/pds">
+
+            <span class="icon-board" alt="P">P</span>
+        <span class="menu_over" title="자료실">자료실</span>
+        
+        </a>
+
+
+        <a class="menu-group" href="/service/group/allreview">
+
+            <span class="icon-board" alt="E">E</span>
+        <span class="menu_over" title="강좌/사용기">강좌/사용기</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/lecture">
+
+            <span class="icon-board" alt="L">L</span>
+        <span class="menu_over" title="팁과강좌">팁과강좌</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/use">
+
+            <span class="icon-board" alt="U">U</span>
+        <span class="menu_over" title="사용기">사용기</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/chehum">
+
+            <span class="icon-board" alt="·">·</span>
+        <span class="menu_over" title="체험단사용기">체험단사용기</span>
+        
+        </a>
+
+
+        <a class="menu-group" href="/service/group/allsell">
+
+            <span class="icon-board" alt="W">W</span>
+        <span class="menu_over" title="사고팔고">사고팔고</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/jirum">
+
+            <span class="icon-board" alt="J">J</span>
+        <span class="menu_over" title="알뜰구매">알뜰구매</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/sold">
+
+            <span class="icon-board" alt="S">S</span>
+        <span class="menu_over" title="회원중고장터">회원중고장터</span>
+        
+        </a>
+
+
+        <a class="menu-list" href="/service/board/hongbo">
+
+            <span class="icon-board" alt="B">B</span>
+        <span class="menu_over" title="직접홍보">직접홍보</span>
+        
+        </a>
+
+
+        <a class="menu-insurance" href="/service/group/insure">
+
+            <span class="icon-board" alt="·">·</span>
+        <span class="menu_over" title="보험상담실">보험상담실</span>
+        
+        </a>
+
+
+        <a class="menu-promo invisible" href="/service/">
+
+            <span class="icon-board" alt="H">H</span>
+        <span class="menu_over" title="클리앙홈">클리앙홈</span>
+        
+        </a>
+</div>
+<div class="menu_line"></div>    
+	            <div class="menu_somoim">
+    <a class="menu-title" id="more">
+		<span class="menu_over">소모임</span>
+        <span class="fa fa-angle-down"></span>
+	</a>
+	<a class="menu-group somoim" href="/service/group/cm_all">
+		<span class="menu_over">소모임전체</span>
+	</a>
+	
+			<a class="menu-list somoim" href="/service/board/cm_car"><span class="icon-board">·</span><span class="menu_over">굴러간당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_iphonien"><span class="icon-board">·</span><span class="menu_over">아이포니앙</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_stock"><span class="icon-board">·</span><span class="menu_over">주식한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_mac"><span class="icon-board">·</span><span class="menu_over">MaClien</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_japanlive"><span class="icon-board">·</span><span class="menu_over">일본산당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_app"><span class="icon-board">·</span><span class="menu_over">개발한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_bike"><span class="icon-board">·</span><span class="menu_over">자전거당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_ai"><span class="icon-board">·</span><span class="menu_over">AI당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_bts"><span class="icon-board">·</span><span class="menu_over">방탄소년당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_coffee"><span class="icon-board">·</span><span class="menu_over">클다방</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_andro"><span class="icon-board">·</span><span class="menu_over">안드로메당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_mbike"><span class="icon-board">·</span><span class="menu_over">이륜차당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_poe"><span class="icon-board">·</span><span class="menu_over">패스오브엑자일당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_girl"><span class="icon-board">·</span><span class="menu_over">소시당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_nas"><span class="icon-board">·</span><span class="menu_over">나스당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_vcoin"><span class="icon-board">·</span><span class="menu_over">가상화폐당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_rowing"><span class="icon-board">·</span><span class="menu_over">노젓는당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_baby"><span class="icon-board">·</span><span class="menu_over">육아당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_oversea"><span class="icon-board">·</span><span class="menu_over">바다건너당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_drone"><span class="icon-board">·</span><span class="menu_over">날아올랑</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_baseball"><span class="icon-board">·</span><span class="menu_over">야구당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_wow"><span class="icon-board">·</span><span class="menu_over">WOW당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_beer"><span class="icon-board">·</span><span class="menu_over">비어있당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_photo"><span class="icon-board">·</span><span class="menu_over">찰칵찍당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_lang"><span class="icon-board">·</span><span class="menu_over">어학당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_swim"><span class="icon-board">·</span><span class="menu_over">퐁당퐁당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_steam"><span class="icon-board">·</span><span class="menu_over">스팀한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_gemwar"><span class="icon-board">·</span><span class="menu_over">젬워한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_golf"><span class="icon-board">·</span><span class="menu_over">골프당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_werule"><span class="icon-board">·</span><span class="menu_over">소셜게임한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_tennis"><span class="icon-board">·</span><span class="menu_over">테니스친당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_adhd"><span class="icon-board">·</span><span class="menu_over">ADHD당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_console"><span class="icon-board">·</span><span class="menu_over">콘솔한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_edc"><span class="icon-board">·</span><span class="menu_over">갖고다닌당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_3dmaking"><span class="icon-board">·</span><span class="menu_over">3D메이킹</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_70"><span class="icon-board">·</span><span class="menu_over">X세대당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_aigurim"><span class="icon-board">·</span><span class="menu_over">AI그림당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_airplane"><span class="icon-board">·</span><span class="menu_over">날아간당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_applewatch"><span class="icon-board">·</span><span class="menu_over">사과시계당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_badmin"><span class="icon-board">·</span><span class="menu_over">배드민턴당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_basket"><span class="icon-board">·</span><span class="menu_over">농구당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_bb"><span class="icon-board">·</span><span class="menu_over">블랙베리당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_bear"><span class="icon-board">·</span><span class="menu_over">곰돌이당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_billiards"><span class="icon-board">·</span><span class="menu_over">FM당구당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_blockchain"><span class="icon-board">·</span><span class="menu_over">블록체인당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_board"><span class="icon-board">·</span><span class="menu_over">보드게임당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_book"><span class="icon-board">·</span><span class="menu_over">활자중독당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_bowling"><span class="icon-board">·</span><span class="menu_over">볼링친당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_camp"><span class="icon-board">·</span><span class="menu_over">캠핑간당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_cat"><span class="icon-board">·</span><span class="menu_over">냐옹이당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_civilize"><span class="icon-board">·</span><span class="menu_over">문명하셨당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_classic"><span class="icon-board">·</span><span class="menu_over">클래시앙</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_cook"><span class="icon-board">·</span><span class="menu_over">요리한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_cookierun"><span class="icon-board">·</span><span class="menu_over">쿠키런당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_daegu"><span class="icon-board">·</span><span class="menu_over">대구당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_danger"><span class="icon-board">·</span><span class="menu_over">DANGER당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_dduk"><span class="icon-board">·</span><span class="menu_over">뚝딱뚝당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_dia"><span class="icon-board">·</span><span class="menu_over">디아블로당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_dog"><span class="icon-board">·</span><span class="menu_over">개판이당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_dongsup"><span class="icon-board">·</span><span class="menu_over">동숲한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_ebicycle"><span class="icon-board">·</span><span class="menu_over">전기자전거당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_ebook"><span class="icon-board">·</span><span class="menu_over">e북본당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_eve"><span class="icon-board">·</span><span class="menu_over">이브한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_fashion"><span class="icon-board">·</span><span class="menu_over">패셔니앙</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_fish"><span class="icon-board">·</span><span class="menu_over">물고기당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_fisher"><span class="icon-board">·</span><span class="menu_over">도시어부당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_fm"><span class="icon-board">·</span><span class="menu_over">FM한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_food"><span class="icon-board">·</span><span class="menu_over">맛있겠당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_formula1"><span class="icon-board">·</span><span class="menu_over">포뮬러당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_girlgroup"><span class="icon-board">·</span><span class="menu_over">걸그룹당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_glasses"><span class="icon-board">·</span><span class="menu_over">안경쓴당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_gta"><span class="icon-board">·</span><span class="menu_over">차턴당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_gun"><span class="icon-board">·</span><span class="menu_over">총쏜당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_gym"><span class="icon-board">·</span><span class="menu_over">땀흘린당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_hearth"><span class="icon-board">·</span><span class="menu_over">하스스톤한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_heroes"><span class="icon-board">·</span><span class="menu_over">히어로즈한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_instar"><span class="icon-board">·</span><span class="menu_over">인스타한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_iot"><span class="icon-board">·</span><span class="menu_over">IoT당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_kara"><span class="icon-board">·</span><span class="menu_over">KARA당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_keyboard"><span class="icon-board">·</span><span class="menu_over">키보드당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_kordle"><span class="icon-board">·</span><span class="menu_over">꼬들한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_ku"><span class="icon-board">·</span><span class="menu_over">덕질한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_leather"><span class="icon-board">·</span><span class="menu_over">가죽당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_lego"><span class="icon-board">·</span><span class="menu_over">레고당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_linux"><span class="icon-board">·</span><span class="menu_over">리눅서당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_lol"><span class="icon-board">·</span><span class="menu_over">LOLien</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_mabi"><span class="icon-board">·</span><span class="menu_over">Mabinogien</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_main"><span class="icon-board">·</span><span class="menu_over">임시소모임</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_midra"><span class="icon-board">·</span><span class="menu_over">미드당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_military"><span class="icon-board">·</span><span class="menu_over">밀리터리당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_mine"><span class="icon-board">·</span><span class="menu_over">땅판당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_monhunt"><span class="icon-board">·</span><span class="menu_over">헌팅한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_mount"><span class="icon-board">·</span><span class="menu_over">오른당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_movie"><span class="icon-board">·</span><span class="menu_over">영화본당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_mtg"><span class="icon-board">·</span><span class="menu_over">MTG한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_music"><span class="icon-board">·</span><span class="menu_over">소리당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_nokien"><span class="icon-board">·</span><span class="menu_over">노키앙</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_note"><span class="icon-board">·</span><span class="menu_over">적는당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_onair"><span class="icon-board">·</span><span class="menu_over">방송한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_pctuning"><span class="icon-board">·</span><span class="menu_over">PC튜닝한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_pic"><span class="icon-board">·</span><span class="menu_over">그림그린당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_picnic"><span class="icon-board">·</span><span class="menu_over">소풍간당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_plant"><span class="icon-board">·</span><span class="menu_over">심는당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_rasp"><span class="icon-board">·</span><span class="menu_over">라즈베리파이당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_redeem"><span class="icon-board">·</span><span class="menu_over">품앱이당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_rhythm"><span class="icon-board">·</span><span class="menu_over">리듬탄당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_running"><span class="icon-board">·</span><span class="menu_over">달린당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_sea"><span class="icon-board">·</span><span class="menu_over">Sea마당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_sim"><span class="icon-board">·</span><span class="menu_over">SimSim하당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_simsik"><span class="icon-board">·</span><span class="menu_over">심야식당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_slate"><span class="icon-board">·</span><span class="menu_over">윈태블릿당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_snow"><span class="icon-board">·</span><span class="menu_over">미끄러진당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_soccer"><span class="icon-board">·</span><span class="menu_over">축구당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_solo"><span class="icon-board">·</span><span class="menu_over">나혼자산당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_star"><span class="icon-board">·</span><span class="menu_over">스타한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_surfing"><span class="icon-board">·</span><span class="menu_over">파도탄당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_test"><span class="icon-board">·</span><span class="menu_over">테스트당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_thinkpad"><span class="icon-board">·</span><span class="menu_over">빨콩이당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_tiwatch"><span class="icon-board">·</span><span class="menu_over">공대시계당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_tour"><span class="icon-board">·</span><span class="menu_over">여행을떠난당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_tpad"><span class="icon-board">·</span><span class="menu_over">터치패드당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_twit"><span class="icon-board">·</span><span class="menu_over">트윗당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_venture"><span class="icon-board">·</span><span class="menu_over">창업한당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_vr"><span class="icon-board">·</span><span class="menu_over">VR당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_watch"><span class="icon-board">·</span><span class="menu_over">시계찬당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_webos"><span class="icon-board">·</span><span class="menu_over">WebOs당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_whiskey"><span class="icon-board">·</span><span class="menu_over">위스키당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_wine"><span class="icon-board">·</span><span class="menu_over">와인마신당</span></a>
+			<a class="menu-list somoim" href="/service/board/cm_wp"><span class="icon-board">·</span><span class="menu_over">윈폰이당</span></a>
+</div>
+<a class="menu-group somoim etc" href="/service/board/cm_main">
+    <span class="menu_over">임시소모임</span>
+</a>
+<div class="menu_line"></div>        
+            </div>
+        </div>
+        <div class="button_cs">
+            <a href="javascript:;" class="button_dropmenu" data-toggle="dropdown">고객지원</a>
+            <ul class="dropdown-menu">
+                <li><a href="/service/cs/singo/article">게시물 삭제 요청</a></li>
+                <li><a href="/service/cs/singo/article?type=illegal">불법촬영물등 신고</a></li>
+                <li><a href="/service/cs/singo/message">쪽지 신고</a></li>
+                <li><a href="/service/cs/singo/nickname">닉네임 신고</a></li>
+                <li><a href="mailto:admin@clien.net">제보 및 기타 제안</a></li>
+            </ul>
+        </div>
+	</div>
+	<div class="menu_area">
+        <a href="/service" class="link_home" title="클리앙홈">© CLIEN.NET</a>
+        <a href="#menuTop" class="link_top" title="메뉴맨위로"><i class="fa fa-bars"></i></a>
+    </div>
+</div> 
+	<div class="nav_body">
+		<div class="nav_content">
+			<div class="bullhorn danger" style="display: none;" id="noticeBullhom">
+	<div class="bullhorn_msg">
+		<span class="bullhorn_label">공지</span><span class="bullhorn_txt">[공지] 10월 3일(토) 00:00~00:30 서버 작업 안내</span>
+			<a href="/service//board/annonce/19272765" class="bullhorn_link">더보기</a>
+		<button type="button" class="bullhorn_button" onclick="setNoticeCookie();">
+			<div class="button_close"></div>
+		</button>
+	</div>
+</div>
+ 
+			<div class="content_list">
+				<div class="board_head ">
+					<div class="board_name">
+						 
+							<h2><a href="/service/board/jirum">알뜰구매</a></h2>
+
+											</div>
+					
+				</div>
+				
+<div class="list_category quick_link">
+	<span class="category_item"><span class="quick current">바로가기 <i class="fa fa-angle-right"></i></span></span>
+	<span class="category_item"><a href="https://link.coupang.com/re/AFFHOME?lptag=AF4576674&traceid=V0-183-879dd1202e5c73b2" target="_blank">쿠팡</a></span>
+	<span class="category_item"><a href="http://s.click.aliexpress.com/e/_dZ9FoOB" target="_blank">AliExpress</a></span>
+	<span class="category_item"><a href="https://www.ebay.com/" target="_blank">ebay.com</a></span>
+	<span class="category_item"><a href="http://click.linkprice.com/click.php?m=gmarket&a=A100210325&l=9999&l_cd1=3&l_cd2=0&tu=http%3A%2F%2Fwww.gmarket.co.kr%2F" target="_blank">G마켓</a></span>
+	<span class="category_item"><a href="http://click.linkprice.com/click.php?m=11st&a=A100210325&l=9999&l_cd1=3&l_cd2=0&tu=http%3A%2F%2Fwww.11st.co.kr%2F" target="_blank">11st</a></span>
+	<span class="category_item"><a href="http://click.linkprice.com/click.php?m=auction&a=A100210325&l=9999&l_cd1=3&l_cd2=0&tu=http%3A%2F%2Fwww.auction.co.kr%2F" target="_blank">옥션</a></span>
+	<span class="category_item"><a href="https://apps.microsoft.com/home?hl=ko-KR&gl=KR" target="_blank">MS스토어</a></span>
+</div>				
+				 					 
+
+					
+ 
+
+ 
+
+
+
+				<div class="board_nav">
+					<div class="board_navigation">
+						<div class="select_ui_box">
+							<span class="fa fa-angle-down list"></span>
+							<select class="select select_ui" name="od" onchange="paging.getBoard('odtype')">
+								<option value="T31" selected >등록일순</option>
+								<option value="T32"  >댓글등록순</option>
+								<option value="T33"  >공감순</option>
+								<option value="T34"  >댓글순</option>
+							</select>
+						</div>
+					</div>
+					
+                    <div class="board_user">
+						<a class="button_recent" href="/service/recent" title="내가본글">내가본글</a> 
+                    </div>
+				</div>
+
+
+					<div class="list_category jirum">
+						<span class="category_item"><a href="/service/board/jirum" class="current">전체보기</a></span>
+								<span class="category_item"><a href="/service/board/jirum?category=1000236" >상품정보</a></span>
+								<span class="category_item"><a href="/service/board/jirum?category=1000238" >오프라인정보</a></span>
+								<span class="category_item"><a href="/service/board/jirum?category=1000240" >이벤트정보</a></span>
+								<span class="category_item"><a href="/service/board/jirum?category=1000239" >공동구매정보</a></span>
+								<span class="category_item"><a href="/service/board/jirum?category=1000237" >해외구매정보</a></span>
+					</div>
+
+
+					 
+							<div class="list_item notice">
+								<div class="list_symph">
+									<span>공지</span>
+								</div>
+								<div class="list_title">
+									<a class="list_subject" href="/service/board/jirum/19147202">토스 및 네이버 페이왕 관련 이벤트 공유용 게시글(재업)</a>
+								</div>
+								<div class="list_author">
+									<span class="nickname">
+											<img src="https://edgio.clien.net/F94/10339098/9a9630182ed642.gif" alt="운영.원" />
+									</span>
+								</div>
+	
+								<div class="list_hit">
+									<span class="hit">102.4 k</span>
+								</div>
+	
+								<div class="list_time">
+										<span class="time popover">02-20<span class="timestamp">2026-02-20 14:41:40</span></span>
+								</div>
+							</div>
+							<div class="list_item notice">
+								<div class="list_symph">
+									<span>공지</span>
+								</div>
+								<div class="list_title">
+									<a class="list_subject" href="/service/board/rule/10963221">알뜰구매게시판 이용규칙</a>
+								</div>
+								<div class="list_author">
+									<span class="nickname">
+											<img src="https://edgio.clien.net/F94/10160260/8d1e3e7e4c521a.gif" alt="운영.A" />
+									</span>
+								</div>
+	
+								<div class="list_hit">
+									<span class="hit">514.3 k</span>
+								</div>
+	
+								<div class="list_time">
+										<span class="time popover">07-12<span class="timestamp">2017-07-12 14:54:03</span></span>
+								</div>
+							</div>
+							<div class="list_item notice">
+								<div class="list_symph">
+									<span>공지</span>
+								</div>
+								<div class="list_title">
+									<a class="list_subject" href="/service/board/rule/10707403">사이트 이용규칙 (종합)</a>
+								</div>
+								<div class="list_author">
+									<span class="nickname">
+											<img src="https://edgio.clien.net/F94/10160260/8d1e3e7e4c521a.gif" alt="운영.A" />
+									</span>
+								</div>
+	
+								<div class="list_hit">
+									<span class="hit">4.6 M</span>
+								</div>
+	
+								<div class="list_time">
+										<span class="time popover">05-07<span class="timestamp">2017-05-07 01:52:42</span></span>
+								</div>
+							</div>
+
+					<div class="list_item hongbo notice_jirum" id="hongboInfoList"></div>
+					
+<div class="contents_jirum notice">
+
+        
+
+
+        <div class="list_item symph_row jirum ">
+            <div class="list_symph ali"></div>
+            <div class="list_title wide " data-toggle-custom="dropdown">
+                <span class="list_subject" title="[알리익스프레스] 11.11 광군제 정보 안내 (클리앙 전용 할인코드，결제할인)">
+                    <a href="/service/board/jirum/19284292"> [알리익스프레스] 11.11 광군제 정보 안내 (클리앙 전용 할인코드，결제할인)</a>
+                        <a class="list_reply reply_symph" href="/service/board/jirum/19284292#comment-point" title="댓글11개">
+                            <span class="rSymph05">11</span>
+                        </a>
+                </span>
+
+                <div class="keyword">
+                    <span class="icon_keyword aliexpress">알리정보</span>
+                </div>
+            </div>
+                <div class="list_author line">
+                <div class="list_author_line">
+                    
+	 
+		 
+		<span class="nickname">
+				<span title="김알리">김알리</span>
+		</span>
+ 
+                    <span class="memo none" data-role="list_memo"></span>
+                </div>
+            </div>
+
+            <div class="list_hit">
+                <span class="hit">26.6 k</span>
+            </div>
+
+            <div class="list_time">
+                    <span class="time popover">10-29<span class="timestamp">2026-10-29 10:47:27</span></span>
+            </div>
+        </div>
+</div>
+
+
+<div class="modal_promotion" id="jirum_modal">
+	<div class="modal_promotion_content">
+		<div class="modal_title">
+			<strong>알뜰구매 공지관리</strong>
+			<button type="button" class="modal_close" onclick="app.closeNoticeModal();" aria-label="close">
+				<div class="modal_button_close"></div>
+			</button>
+		</div>
+		<div class="modal_input">
+						<input id="jirumNoticeSn" type="text" class="key_input" placeholder="게시글 번호(8자리)를 입력하세요." spellcheck="false" value="19284292">
+		</div>
+		<div class="modal_help_msg">
+			<ul>
+				<li>공지하려는 게시글번호를 ,(콤마)로 구분하여 입력해주세요.</li>
+				<li>공지글은 번호가 입력된 순서대로 상위에 보여집니다.</li>
+				<li>공지글은 반드시 본인이 작성한 게시물의 게시물번호만 등록할 수 있습니다.</li>
+				<li>게시물번호가 틀리거나, 본인이 작성한 게시글이 아닌 경우 오류 메시지가 보여집니다.</li>
+				<li>공지글 삭제를 원하는 경우 게시글번호를 직접 지우고 '저장' 버튼을 누르면 등록된 공지가 삭제됩니다.</li>
+				<li>공지글은 저장 후 대략 1분이 지나야 게시판에 적용됩니다.</li>
+			</ul>
+		</div>
+
+		<div class="modal_footer">
+			<button type="button" class="modal_button_confirm" onclick="app.saveJirumNotice();">저장</button>
+		</div>
+	</div>
+	<div class="modal_bg" onclick="app.closeNoticeProModal();"></div>
+</div>
+<div class="list_top_kcmdjfkejf">
+	<div id='div-pc-list-top' class="ad_banner"></div>
+</div>
+
+					
+				
+				<div class="list_content">
+									 
+
+
+
+
+ 
+
+<div class="contents_jirum">
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=shpaik data-board-sn=19289290 data-comment-count=2>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] YSR043 Glass Tube Digital 외 일시무료">
+						<a href="/service/board/jirum/19289290?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] YSR043 Glass Tube Digital 외 일시무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19289290?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글2개">
+							<span class="rSymph05">2</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19289290?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15858436/142dbb7d121045.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15858436/142dbb7d121045.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가 한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다. https://play.goog</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">2788</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-08<span class="timestamp">2026-11-08 11:32:42</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=yst17 data-board-sn=19289138 data-comment-count=2>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="(에픽 게임즈) 표류도시 &amp; Idle Champions of the Forgotten Realms 무료 (11월13">
+						<a href="/service/board/jirum/19289138?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							(에픽 게임즈) 표류도시 &amp; Idle Champions of the Forgotten Realms 무료 (11월13
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19289138?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글2개">
+							<span class="rSymph05">2</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19289138?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15858166/14581623045e30.png?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15858166/14581623045e30.png?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>이번주 에픽 무료게임은 해양 도시건설 생존(?) 게임 표류도시(Flotsam와 D&amp;D기반 방치형 게임 Idel champion of the Forgotten </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="사연객">사연객</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">4622</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-07<span class="timestamp">2026-11-07 21:05:27</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=jazz0128 data-board-sn=19289074 data-comment-count=5>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="데체코 올리브오일 1L 2병 토마토홀증정 28,280원">
+						<a href="/service/board/jirum/19289074?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							데체코 올리브오일 1L 2병 토마토홀증정 28,280원
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19289074?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글5개">
+							<span class="rSymph05">5</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19289074?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15858071/13f4edf9693375.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15858071/13f4edf9693375.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>가장 싼 가격이라고 합니다  </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="조미카엘">조미카엘</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">4449</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-07<span class="timestamp">2026-11-07 18:12:07</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=shpaik data-board-sn=19288922 data-comment-count=4>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] Ascent Analog Watch Face 외 일시 무료">
+						<a href="/service/board/jirum/19288922?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] Ascent Analog Watch Face 외 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19288922?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글4개">
+							<span class="rSymph05">4</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288922?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857817/143874cca717b3.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857817/143874cca717b3.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가 한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다. https://play.goog</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">4012</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-07<span class="timestamp">2026-11-07 11:23:54</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=jazz0128 data-board-sn=19288733 data-comment-count=6>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">2</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="아디다스 방한화 30,520원">
+						<a href="/service/board/jirum/19288733?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							아디다스 방한화 30,520원
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19288733?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글6개">
+							<span class="rSymph05">6</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 2</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288733?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857541/1408255c10390b.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857541/1408255c10390b.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>배송비 2500원 5만 이상 무배 신기가 힘드는 사이즈 업 하셔야 합니다  </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="조미카엘">조미카엘</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">9281</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 20:39:20</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=shpaik data-board-sn=19288656 data-comment-count=3>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] Terminal CLI Watch Face 외 일시 무료">
+						<a href="/service/board/jirum/19288656?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] Terminal CLI Watch Face 외 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19288656?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글3개">
+							<span class="rSymph05">3</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288656?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857464/13fe31c7606597.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857464/13fe31c7606597.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가 한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다. https://play.goog</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">5232</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 17:36:14</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=jazz0128 data-board-sn=19288638 data-comment-count=1>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="대패삼겹살 1+1 2kg 15,500원">
+						<a href="/service/board/jirum/19288638?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							대패삼겹살 1+1 2kg 15,500원
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19288638?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글1개">
+							<span class="rSymph05">1</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288638?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857427/14477ff5f0e50e.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857427/14477ff5f0e50e.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>옆동네 분이 자주 먹는건데 지금 가장 가격이 저렴하다고 합니다  </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="조미카엘">조미카엘</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">5707</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 16:49:38</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=jazz0128 data-board-sn=19288627 data-comment-count=0>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="LG 울트라기어 27인치 QHD IPS 200Hz 1ms 게이밍모니터">
+						<a href="/service/board/jirum/19288627?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							LG 울트라기어 27인치 QHD IPS 200Hz 1ms 게이밍모니터
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288627?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857411/144604533cdbb5.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857411/144604533cdbb5.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>LG 울트라기어 27G610A 27인치 QHD IPS 200Hz 1ms 게이밍모니터 게임용 찾으시면 이것도 가격 괜찮네요 200Hz 고주사율 IPS 패널</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="조미카엘">조미카엘</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">5678</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 16:23:03</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=jazz0128 data-board-sn=19288614 data-comment-count=0>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="삼성 Mini LED TV 4k 163cm(65인치)">
+						<a href="/service/board/jirum/19288614?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							삼성 Mini LED TV 4k 163cm(65인치)
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288614?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857377/1445489e21e3af.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857377/1445489e21e3af.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>삼성 Mini LED TV 4k 163cm(65인치) 체감가 86만대입니다 며칠전 보다 5만원 더 저렴 해진듯 하네   </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="조미카엘">조미카엘</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">6329</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 16:09:29</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=jazz0128 data-board-sn=19288602 data-comment-count=0>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="풀무원 브리지톡 탄산수 500mL 20병 6,940원">
+						<a href="/service/board/jirum/19288602?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							풀무원 브리지톡 탄산수 500mL 20병 6,940원
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288602?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857366/13f87af0fade2a.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857366/13f87af0fade2a.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>빅토리아 행사 금방 끝났는데 이것도 가격 저렴하네요 무배  </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="조미카엘">조미카엘</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">4428</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 15:51:52</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=keysuck data-board-sn=19288328 data-comment-count=7>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[언더상회] 슬릭 모션 온라인 면도날 대용량 세트 (면도날 16입) + 슬릭 모션 면도기 ">
+						<a href="/service/board/jirum/19288328?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[언더상회] 슬릭 모션 온라인 면도날 대용량 세트 (면도날 16입) + 슬릭 모션 면도기 
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19288328?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글7개">
+							<span class="rSymph05">7</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19288328?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15857026/138ae5ce997884.png?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15857026/138ae5ce997884.png?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>네이버 도루코 공홈보다 많이 저렴해서 공유합니다.  면도기 + 면도날 17개 + 쉐이빙젤 옵션은 39,800원입니다.  LINK</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="GTI">GTI</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">6086</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-06<span class="timestamp">2026-11-06 09:49:23</span></span>
+				</div>
+			</div>
+		
+
+			
+<div class="list_item blocked">
+	<div class="list_symph">
+		<button class="button_info" data-toggle="dropdown" onclick="ui.singoActionReason('19287592', '')">
+			<i class="fa fa-exclamation-circle"></i>
+		</button>
+		<div class="dropdown-menu singo_info">
+			<div class="singo_item">
+				<div class="singo_title">사유</div>
+				<div class="singo_comments" data-role="singo-reason" id="singoReason_19287592">-</div>
+			</div>
+			<div class="singo_item">
+				<div class="singo_title">일시</div>
+				<div class="singo_comments" data-role="singo-date" id="singoDate_19287592">-</div>
+			</div>
+		</div>
+	</div>
+	<div class="list_title"><span class="list_subject">관리자 삭제된 게시물입니다.</span></div>
+</div>
+ 
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19287098 data-comment-count=5>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">5</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] SamWatch Analog B Sports 2024 일시 무료">
+						<a href="/service/board/jirum/19287098?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] SamWatch Analog B Sports 2024 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19287098?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글5개">
+							<span class="rSymph05">5</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 5</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19287098?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15855483/13460ac361a395.png?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15855483/13460ac361a395.png?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가 내일 오전 9시까지 한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다.</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">9134</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-04<span class="timestamp">2026-11-04 09:21:49</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19286856 data-comment-count=5>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">2</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[네이버] 도루코 슬릭 모션 면도기 (4,000원)">
+						<a href="/service/board/jirum/19286856?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[네이버] 도루코 슬릭 모션 면도기 (4,000원)
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19286856?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글5개">
+							<span class="rSymph05">5</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 2</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19286856?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15855132/13655109a659a8.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15855132/13655109a659a8.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>배송비 포함가격으로 정가 대비 80% 세일 가격에 판매중이라 정보공유합니다. 사진 출처 및 구매 링크는 아래와 같습니다. </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">13.4 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-03<span class="timestamp">2026-11-03 19:44:17</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=gillnom data-board-sn=19286675 data-comment-count=33>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">2</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="시월 모바일 5G 180GB+10mb 통화 무제한/부가통화 300분 평생요금제">
+						<a href="/service/board/jirum/19286675?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							시월 모바일 5G 180GB+10mb 통화 무제한/부가통화 300분 평생요금제
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19286675?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글33개">
+							<span class="rSymph05">33</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 2</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19286675?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15854919/1354a6a6554148.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15854919/1354a6a6554148.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>인터넷 결합 가능하고 5G 180gb에 소진 후 10mbs로 무제한 사용가능 하네요 월 27,500원입니다.</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="쭈니똥이">쭈니똥이</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">17.3 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-03<span class="timestamp">2026-11-03 14:38:54</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=shpaik data-board-sn=19286272 data-comment-count=4>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">1</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] ML2U 397b 외 일시 무료">
+						<a href="/service/board/jirum/19286272?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] ML2U 397b 외 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19286272?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글4개">
+							<span class="rSymph05">4</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 1</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19286272?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15854258/130cea3f15928a.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15854258/130cea3f15928a.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가 한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다. https://play.goog</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">11.7 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 16:44:19</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=shpaik data-board-sn=19286200 data-comment-count=0>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[Android] Reigns 시리즈 50% 세일">
+						<a href="/service/board/jirum/19286200?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[Android] Reigns 시리즈 50% 세일
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19286200?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15854071/13a279b4573f1a.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15854071/13a279b4573f1a.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>스와이프 어드벤처 게임 ‘레인’ 시리즈가 50% 세일중이라 정보 공유합니다. 좌우 스와이프로 잔혹하거나 자비로운 통치 결정을 내</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">12.0 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 14:36:24</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=break0ut data-board-sn=19286112 data-comment-count=1>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">1</em></div>
+
+				<div class="list_title wide " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="📱 10GB 이상 월 1,000원 이하 알뜰폰 요금제 추천 — 2026년 11월">
+						<a href="/service/board/jirum/19286112?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							📱 10GB 이상 월 1,000원 이하 알뜰폰 요금제 추천 — 2026년 11월
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19286112?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글1개">
+							<span class="rSymph05">1</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 1</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_author line" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="전복죽">전복죽</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">12.4 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 12:01:19</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=shpaik data-board-sn=19286077 data-comment-count=17>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[iOS] 세끼: 사진 식단 일기 리딤">
+						<a href="/service/board/jirum/19286077?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[iOS] 세끼: 사진 식단 일기 리딤
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19286077?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글17개">
+							<span class="rSymph05">17</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19286077?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853850/12ae47b619336d.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853850/12ae47b619336d.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>평소 6.6만원하던 식단 일기 앱의 프로버전이 매일 한정된 수량으로 리딤이 제공되어 정보 공유합니다(언제까지 무료 리딤이 제공</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">12.0 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 11:01:30</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=zoiu098 data-board-sn=19286035 data-comment-count=0>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[스팀] Winter Memories 20% 할인">
+						<a href="/service/board/jirum/19286035?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[스팀] Winter Memories 20% 할인
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19286035?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853809/125012969f7ab9.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853809/125012969f7ab9.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>11월 11일까지 할인합니다</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="사랙이">사랙이</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">11.2 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 09:39:41</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=helpsang data-board-sn=19285972 data-comment-count=10>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">1</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[닌텐도스토어/스위치2] 파이널판타지VII REMAKE INTERGRADE 8,960원 REBIRTH 9,420원">
+						<a href="/service/board/jirum/19285972?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[닌텐도스토어/스위치2] 파이널판타지VII REMAKE INTERGRADE 8,960원 REBIRTH 9,420원
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19285972?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글10개">
+							<span class="rSymph05">10</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 1</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19285972?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853706/1293fffe6cafe2.jpg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853706/1293fffe6cafe2.jpg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>FINAL FANTASY VII REBIRTH  FINAL FANTASY VII REMAKE INTERGRADE https://store.nintendo.co.kr/70010000100833</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="컴퓨터">컴퓨터</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">12.3 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 02:59:24</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=Snuffdog data-board-sn=19285970 data-comment-count=6>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">6</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[Mac/MS스토어] Wallpets: 냥이 강쥐 인터렉티브 월페이퍼 (일시 무료)">
+						<a href="/service/board/jirum/19285970?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[Mac/MS스토어] Wallpets: 냥이 강쥐 인터렉티브 월페이퍼 (일시 무료)
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19285970?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글6개">
+							<span class="rSymph05">6</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 6</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19285970?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853702/1237825242bb0c.png?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853702/1237825242bb0c.png?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>LINK     0. 앱 설명 MacOS 바탕화면이나 Windows10/11 바탕화면에서 고양이 강아지 고릴라 사막여우 등의 동물들이 마우스를 따</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="강걸우">강걸우</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">10.1 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-02<span class="timestamp">2026-11-02 02:10:32</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19285895 data-comment-count=4>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[iOS] mo.Days 일시 무료">
+						<a href="/service/board/jirum/19285895?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[iOS] mo.Days 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19285895?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글4개">
+							<span class="rSymph05">4</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19285895?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853549/13698396c0d9e9.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853549/13698396c0d9e9.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>mo.Days는 사진, 색상 및 한 문장으로 매일을 기록하는 일기 앱입니다. 출시 기념으로 11월 7일까지 무료 배포중입니다. 사진 및</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">13.3 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-01<span class="timestamp">2026-11-01 21:12:19</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19285700 data-comment-count=2>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">0</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[디지털그랩] 애플워치 11 &amp; 울트라 3, 30% 세일">
+						<a href="/service/board/jirum/19285700?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[디지털그랩] 애플워치 11 &amp; 울트라 3, 30% 세일
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19285700?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글2개">
+							<span class="rSymph05">2</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19285700?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853140/120b11f138d552.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853140/120b11f138d552.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>덧) 주요 제품 품절되어 본문 종료 처리합니다. 앱 구매, 특정 카드 할인 이벤트 중입니다. 11월 8일까지입니다. </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">12.9 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-01<span class="timestamp">2026-11-01 12:35:07</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19285658 data-comment-count=6>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">5</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[iOS/WatchOS] RadioWatch: Live Radio 일시 무료">
+						<a href="/service/board/jirum/19285658?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[iOS/WatchOS] RadioWatch: Live Radio 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19285658?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글6개">
+							<span class="rSymph05">6</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 5</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19285658?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853094/12a7c0a6fc384a.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853094/12a7c0a6fc384a.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>RadioWatch는 전 세계 수천 개의 라디오를 국가·장르·언어별로 탐색할 수 있습니다. 특히 애플 워치에서 셀룰러 네트워크 또는 W</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">12.7 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-01<span class="timestamp">2026-11-01 09:50:33</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19285653 data-comment-count=2>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">2</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] TVV Winter 2 Watch Face 외 일시 무료">
+						<a href="/service/board/jirum/19285653?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] TVV Winter 2 Watch Face 외 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19285653?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글2개">
+							<span class="rSymph05">2</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 2</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19285653?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/11/15853085/1343fcaa5b4706.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/11/15853085/1343fcaa5b4706.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가 한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다. https://play.goog</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">10.7 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">11-01<span class="timestamp">2026-11-01 09:44:36</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19284749 data-comment-count=6>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[WearOS] LX029 Car Luxury Watch Face 외 일시 무료">
+						<a href="/service/board/jirum/19284749?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[WearOS] LX029 Car Luxury Watch Face 외 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19284749?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글6개">
+							<span class="rSymph05">6</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19284749?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/10/15851853/120a8bfa741334.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/10/15851853/120a8bfa741334.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>유료 워치 페이스가한시적으로 무료배포중이라 정보공유합니다. 사진 출처 및 관련 링크는 아래와 같습니다. https://play.googl</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">15.8 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">10-30<span class="timestamp">2026-10-30 09:49:41</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19284673 data-comment-count=3>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">8</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[에픽게임즈/스팀] Sorry We're Closed, Galaxy Kart &amp; Hexologic 일시 무료">
+						<a href="/service/board/jirum/19284673?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[에픽게임즈/스팀] Sorry We're Closed, Galaxy Kart &amp; Hexologic 일시 무료
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19284673?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글3개">
+							<span class="rSymph05">3</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 8</span>
+							</span>
+							<a href="/service/board/jirum?category=1000240" class="icon_keyword">이벤트정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19284673?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/10/15851747/1294f50c3ee91e.webp?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/10/15851747/1294f50c3ee91e.webp?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>이번 주 무료게임은 Sorry We're Closed, Galaxy Kart 그리고 Hexologic입니다. 트레일러 영상은 각각 다음과 같습니다.    사진</pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">16.2 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">10-30<span class="timestamp">2026-10-30 04:17:09</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  sold_out" data-role="list-row" data-author-id=shpaik data-board-sn=19284347 data-comment-count=6>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">2</em></div>
+
+				<div class="list_title  " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[하이마트] 아이패드 프로 11 M5 Wi‑Fi 2TB 35% 세일">
+						<a href="/service/board/jirum/19284347?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[하이마트] 아이패드 프로 11 M5 Wi‑Fi 2TB 35% 세일
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19284347?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글6개">
+							<span class="rSymph05">6</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 2</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+							<span class="icon_info">품절</span>
+					</div>
+				</div>
+					<div class="list_img" data-role="list-img">
+						<div class="list_image">
+							<a class="list_thumbnail" href="/service/board/jirum/19284347?od=T31&amp;po=0&amp;category=0&amp;groupCd=">
+								<img src="https://edgio.clien.net/F01/2026/10/15851313/11c4c6209b694b.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_noimage.png'">
+							</a>
+							<div class="popover_thumbnail">
+								<img src="https://edgio.clien.net/F01/2026/10/15851313/11c4c6209b694b.jpeg?scale=width:480" onerror="this.src='/service/image/jirum_thnoimage.png'">
+								<div class="list_preview"><pre>덧) 프로 품절되어 종료 처리합니다. 정가 대비 35% 세일 중입니다. 스페이스 블랙  실버(나노 텍스처)  덧) 아이패드 11세대도 </pre></div>
+							</div>
+						</div>
+					</div>
+					<div class="list_author" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="LeChatNoir">LeChatNoir</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">20.8 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">10-29<span class="timestamp">2026-10-29 12:31:05</span></span>
+				</div>
+			</div>
+		
+
+			<div class="list_item symph_row jirum  " data-role="list-row" data-author-id=aliexpress data-board-sn=19284292 data-comment-count=11>
+				<span class="list_stare" style="display: none;" data-role="observeIcon"><i class="fa fa-eye"></i></span>
+				<div class="list_symph view_symph" data-role="list-like-count"><em class="none">3</em></div>
+
+				<div class="list_title wide " data-role="list-title" data-toggle-custom="dropdown">
+					<span class="list_subject" data-role="cut-string" title="[알리익스프레스] 11.11 광군제 정보 안내 (클리앙 전용 할인코드，결제할인)">
+						<a href="/service/board/jirum/19284292?od=T31&amp;po=0&amp;category=0&amp;groupCd=" data-role="list-title-text">
+							[알리익스프레스] 11.11 광군제 정보 안내 (클리앙 전용 할인코드，결제할인)
+						</a>
+						<a class="list_reply reply_symph" href="/service/board/jirum/19284292?od=T31&amp;po=0&amp;category=0&amp;groupCd=#comment-point" data-role="ele-after" title="댓글11개">
+							<span class="rSymph05">11</span>
+							<strong class="color_red" data-role="observeCmCount"></strong>
+							<strong class="color_red" data-role="recentCmCount"></strong>
+						</a>
+					</span>
+
+					<div class="keyword">
+							<span class="view_symph" data-role="list-like-count">
+								<span class="list_votes"><i class="fa fa-heart"></i> 3</span>
+							</span>
+							<a href="/service/board/jirum?category=1000236" class="icon_keyword">상품정보</a>
+					</div>
+				</div>
+					<div class="list_author line" data-role="list-author">
+					<div class="list_author_line">
+						
+	 
+		 
+		<span class="nickname">
+				<span title="김알리">김알리</span>
+		</span>
+ 
+						<span class="memo none" data-role="list_memo"></span>
+					</div>
+				</div>
+
+				<div class="list_hit">
+					<span class="hit">26.6 k</span>
+				</div>
+
+				<div class="list_time">
+						<span class="time popover">10-29<span class="timestamp">2026-10-29 10:47:27</span></span>
+				</div>
+			</div>
+</div>									</div>
+
+				<div class="list_bottom_ad">
+<div id='div-pc-list-below' class="ad_banner"></div>				</div>
+
+				<div class="list_button_area">
+						<a href="javascript:;" class="button_next_page" onclick="paging.getBoard('side_plus')"><span class="button_name">다음페이지</span><i class="fa fa-caret-right"></i></a>
+
+                        
+
+<div class="board-pagination">
+    <div class="board-nav">
+
+
+
+
+        <div class="board-nav-area">
+                <a href="javascript:paging.getBoard('direct', 0);" id="pagingActiveId_1" class="board-nav-page">1</a>
+                <a href="javascript:paging.getBoard('direct', 1);" id="pagingActiveId_2" class="board-nav-page">2</a>
+                <a href="javascript:paging.getBoard('direct', 2);" id="pagingActiveId_3" class="board-nav-page">3</a>
+                <a href="javascript:paging.getBoard('direct', 3);" id="pagingActiveId_4" class="board-nav-page">4</a>
+                <a href="javascript:paging.getBoard('direct', 4);" id="pagingActiveId_5" class="board-nav-page">5</a>
+                <a href="javascript:paging.getBoard('direct', 5);" id="pagingActiveId_6" class="board-nav-page">6</a>
+                <a href="javascript:paging.getBoard('direct', 6);" id="pagingActiveId_7" class="board-nav-page">7</a>
+                <a href="javascript:paging.getBoard('direct', 7);" id="pagingActiveId_8" class="board-nav-page">8</a>
+                <a href="javascript:paging.getBoard('direct', 8);" id="pagingActiveId_9" class="board-nav-page">9</a>
+                <a href="javascript:paging.getBoard('direct', 9);" id="pagingActiveId_10" class="board-nav-page">10</a>
+        </div>
+
+            <a href="javascript:paging.getBoard('direct', 1);" class="board-nav-next"></a>
+            <a href="javascript:paging.getBoard('direct', 10);" class="board-nav-next ten">다음</a>
+    </div>
+</div>
+
+<input type="hidden" value="1" id="startPagePo">
+
+<script>
+    var num = 0+1;
+    var activeId = 'pagingActiveId_' + num.toString();
+    document.getElementById(activeId).className += " active";
+</script> 
+
+					<div class="button_post">
+						
+<div class="action_write" data-role="dropdown-write-article">
+			<a href="javascript:;" class="action_icon fix blue tooltip">
+			<span class="fa fa-pencil button_icon"></span>
+			<span class="tooltiptext">글쓰기</span>
+		</a>
+
+	<div class="dropdown-menu post_menu" data-role="select-depth" data-action="/service/board/regist">
+		<div class="post_menu_title">알뜰구매 게시판</div>
+		<ul class="post_menu_list">
+
+		 
+					<li><a href="javascript:;" onclick="ui.moveWriteGroupPage('hongbo')">직접홍보</a></li>
+		</ul>
+	</div>
+</div> 
+					</div>
+				</div>
+
+				
+				
+				
+				</div>
+			</div>
+			<div class="nav_action">
+	<div class="action_box">
+
+
+			
+		
+				<a href="javascript:;" class="action_icon tooltip" onclick="paging.getBoard('first')">
+					<i class="fa fa-angle-double-left"></i>
+					<span class="tooltiptext">처음</span>
+				</a>
+				<a href="javascript:;" class="action_icon tooltip" onclick="paging.getBoard('side_minus')">
+					<i class="fa fa-angle-left"></i>
+					<span class="tooltiptext">이전페이지</span>
+				</a>
+
+			<a href="javascript:;" class="action_icon tooltip" onclick="paging.getBoard('side_plus')">
+				<i class="fa fa-angle-right"></i>
+				<span class="tooltiptext">다음페이지</span>
+			</a>
+
+		<a href="#down" class="action_icon none" title="맨아래로 이동">
+			<i class="fa fa-caret-down"></i>
+		</a>
+
+		<div class="backtop" id="back-top">
+			<a href="#top" class="action_icon none" title="맨위로 이동">
+				<i class="fa fa-caret-up"></i>
+			</a>
+		</div>
+	</div>
+</div>
+ 
+		<div class="aside">
+	 <div class="account_section login">
+	<form id="loginForm">
+		<div class="side_account login">
+            <div class="side_account_area">
+                <button type="button" onclick="location.href='/service/auth/login'" name="로그인하기" class="button_submit"><i class="icon-clien"></i><span>로그인</span></button>
+            </div>
+            <div class="account_submit">
+                <div class="account_signup">
+                    <a href="/service/auth/findAccountCert" class="button_signup">아이디&nbsp; · &nbsp;비밀번호 찾기</a>
+					<em></em>
+					<a href="/service/auth/join" class="button_signup">회원가입</a>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+
+
+ 
+
+    
+    <div class="side_kljfssajfl">
+        <div class="side_posjduenfj">
+
+<div id='div-pc-side-1' class="pc_side ad_banner" data-spy="affix" data-offset-top="202"></div>
+
+        </div>
+        <div class="side_line"></div>
+        <div class="side_posjduenfj">
+
+<div id='div-pc-side-2' class="pc_side ad_banner" data-spy="affix" data-offset-top="202"></div>
+
+        </div>
+	</div>
+</div> 
+	</div>
+</div>
+
+<div class="footer_wrap" id="down">
+		<div class="area_terms">
+		<a class="at_item" href="/service/board/rule">이용규칙</a>
+		<a class="at_item" href="/service/board/annonce">운영알림판</a>
+        <a class="at_item" href="/service/board/symposium">운영소통</a>
+		<a class="at_item" href="/service/board/claim">재검토요청</a>
+		<a class="at_item" href="/service/board/faq">도움말</a>
+		<a class="at_item noline" href="/service/board/bug">버그신고</a>
+	</div>
+	<div class="area_legal">
+		<a href="/service/cs/privacy" target="_blank"><strong>개인정보처리방침</strong></a>
+		<a href="/service/cs/conditions" target="_blank">이용약관</a>
+		<a href="/service/cs/policy" target="_blank">책임의 한계와 법적고지</a>
+		<a href="/service/cs/teenager" target="_blank">청소년 보호정책</a>
+	</div>
+	<div class="area_company">© <span id="nowYear"></span>&nbsp;&nbsp;•&nbsp;&nbsp;CLIEN.NET</div>
+
+</div>
+
+<script>
+(function(){
+	var retried = {};
+	var logged = {};
+	var reportDedupTtl = 5 * 60 * 1000;
+	var baseUrl = "/service";
+	var jsPathPrefix = baseUrl + "/js/";
+	var beaconUrl = baseUrl + "/api/client-error/script";
+	var botUaPattern = /(bot|crawler|spider|bingbot|googlebot|yeti|baiduspider|bytespider|duckduckbot|slurp)/i;
+
+	if(botUaPattern.test(navigator.userAgent || '')) {
+		return;
+	}
+
+	function isRetryTarget(src) {
+		var a = document.createElement('a');
+		a.href = src;
+		var origin = location.protocol + '//' + location.host;
+		return a.protocol + '//' + a.host === origin && a.pathname.indexOf(jsPathPrefix) === 0;
+	}
+
+	function isPrerendering() {
+		return document.prerendering === true;
+	}
+
+	function isRecentlyReported(key) {
+		try {
+			var now = Date.now();
+			var storageKey = 'script_load_beacon|' + key;
+			var last = parseInt(sessionStorage.getItem(storageKey) || '0', 10);
+			if(last && now - last < reportDedupTtl) return true;
+			sessionStorage.setItem(storageKey, String(now));
+		} catch(_){}
+		return false;
+	}
+
+	function sendScriptLoadBeacon(status, url, retryUrl) {
+		var key = status + '|' + url;
+		if(logged[key] || isRecentlyReported(key)) return;
+		logged[key] = true;
+		try {
+			if(!navigator.sendBeacon) return;
+			navigator.sendBeacon(beaconUrl,
+				new Blob([JSON.stringify({status: status, url: url, retryUrl: retryUrl || '', ua: navigator.userAgent, ref: location.href, at: Date.now()})],
+					{type: 'application/json'}));
+		} catch(_){}
+	}
+
+	function handleScriptLoadError(src) {
+		if(src.indexOf('_retry=') !== -1) return;
+		if(retried[src]) return;
+		retried[src] = true;
+		sendScriptLoadBeacon('retry_scheduled', src);
+		setTimeout(function(){
+			var r = document.createElement('script');
+			r.src = src + (src.indexOf('?')<0?'?':'&') + '_retry=' + Date.now();
+			r.async = false;
+			r.onload = function(){
+				sendScriptLoadBeacon('retry_success', src, r.src);
+			};
+			r.onerror = function(){
+				sendScriptLoadBeacon('retry_failed', src, r.src);
+			};
+			document.head.appendChild(r);
+		}, 300);
+	}
+
+	window.addEventListener('error', function(e){
+		var t = e.target;
+		if(!t || t.tagName !== 'SCRIPT' || !t.src) return;
+		var src = t.src;
+		if(!isRetryTarget(src)) return;
+		if(isPrerendering()) {
+			document.addEventListener('prerenderingchange', function(){
+				handleScriptLoadError(src);
+			}, {once: true});
+			return;
+		}
+		handleScriptLoadError(src);
+	}, true);
+})();
+</script>
+
+<script src="/service/js/bundle/lib.js?261016v1"></script> 
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async defer src="//www.instagram.com/embed.js"></script>
+
+<script>
+	let IS_DEBUG = false;
+	const BASE_URL = "/service";
+	const API_HOST = "/service/api";
+	const CDN_URL = "https://edgio.clien.net";
+
+	const COOKIE_DOMAIN = "clien.net";
+
+	let IS_LOGIN = false;
+	let sessionUserId = ''; 
+
+
+	let IsMobile = false;
+
+
+	let PAGE_SETTING_THEME = "";
+	let PAGE_SETTING_FONT_SIZE = "";
+	let PAGE_SETTING_KIND_OF_FONT = "";
+	let PAGE_SETTING_SHORT_CUT = "";
+	let PAGE_SETTING_LIST_SIZE = "";
+	
+		PAGE_SETTING_THEME = "white";
+		PAGE_SETTING_FONT_SIZE = "normal";
+		PAGE_SETTING_KIND_OF_FONT = "basic";
+		PAGE_SETTING_SHORT_CUT = "on";
+		PAGE_SETTING_LIST_SIZE = "normal";
+
+	const HONGBO_IMG_PARAMETER = "?scale=width:480";
+	const COMMENT_IMG_PARAMETER = "?scale=width:480";
+	const IMG_PARAMETER = "?scale=width:740";
+
+	let keyData = {};
+
+				keyData["c"] = "/service/group/community";
+				keyData["f"] = "/service/board/park";
+				keyData["i"] = "/service/board/image";
+				keyData["q"] = "/service/board/kin";
+				keyData["d"] = "/service/group/allinfo";
+				keyData["n"] = "/service/board/news";
+				keyData["t"] = "/service/board/useful";
+				keyData["p"] = "/service/board/pds";
+				keyData["e"] = "/service/group/allreview";
+				keyData["l"] = "/service/board/lecture";
+				keyData["u"] = "/service/board/use";
+				keyData["w"] = "/service/group/allsell";
+				keyData["j"] = "/service/board/jirum";
+				keyData["s"] = "/service/board/sold";
+				keyData["b"] = "/service/board/hongbo";
+				keyData["h"] = "/service/";
+
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (settings.type === 'POST' || settings.type === 'PUT' || settings.type === 'DELETE') {
+				if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+					xhr.setRequestHeader("X-CSRF-TOKEN", "21d3d324-2a42-4169-b699-2c8bcead6f1a");
+				}
+			}
+		}
+	});
+</script>
+
+<script src="/service/js/bundle/common-pc.js?261103v1.261103v1"></script> 
+
+<div class="modal_security" id="security_modal">
+    <div class="modal_security_content">
+        <div class="modal_title">
+            <strong><i class="fa fa-shield"></i> 보안 강화를 위한 이메일 인증</strong>
+            <button type="button" class="modal_close" onclick="securityModalClose();" aria-label="close">
+                <div class="modal_button_close"></div>
+            </button>
+        </div>
+
+        <div class="modal_help_msg">
+            <span class="help_subject"><strong>안전한 서비스 이용을 위해 이메일 인증을 완료해 주세요.</strong></span>
+
+            <span class="help_contents">
+         현재 회원님은 <strong>이메일 인증이 완료되지 않은 상태</strong>입니다.<br>
+         최근 급증하는 해킹 및 도용 시도로부터 계정을 보호하기 위해 인증 절차가 강화되었습니다.<br><br>
+
+         <ul class="password_help">
+            <li>이메일 미인증 시 <strong>글쓰기, 댓글 작성 등 게시판 활동이 제한됩니다.</strong></li>
+            <li>이후 <strong>새로운 기기에서 로그인할 때마다 반드시 이메일 인증을 거쳐야 합니다.</strong></li>
+            <li>2단계 인증 사용 회원도 최초 1회는 반드시 인증하여야 합니다.</strong></li>
+            <li><a href="/service/mypage/myInfo">개인정보</a>에서도 이메일 인증을 할 수 있습니다.</li>
+         </ul>
+      </span>
+
+            <a href="/service/auth/email/verify" class="button_2fa" style="margin-top: 15px;">
+                <strong class="button_2fa_title" style="color: #516B82;">지금 이메일 인증하기</strong>
+                <div class="button_2fa_msg">
+                    등록된 이메일 주소를 확인하고 인증번호를 입력하여<br>
+                    인증을 완료해 주세요.
+                </div>
+                <i class="fa fa-envelope-o"></i>
+            </a>
+        </div>
+
+        <div class="modal_footer">
+            <button type="button" class="modal_button_confirm" onclick="securityModalClose();">나중에 하기</button>
+        </div>
+    </div>
+    <div class="modal_bg" onclick="securityModalClose();"></div>
+</div>
+
+<script>
+
+    $(document).ready(function() {
+        if (sessionStorage.getItem('showEmailVerifyModal') === 'true') {
+            sessionStorage.removeItem('showEmailVerifyModal');
+            $("#security_modal").addClass('open');
+        }
+    });
+
+    function securityModalClose() {
+        // 닫기만 수행 (다시 보지 않기 설정 저장 안 함 -> 다음 로그인 시 다시 뜸)
+        $('#security_modal').removeClass('open');
+    }
+</script>
+
+ <input type="hidden" value="L13" id="confListType"> 
+<input type="hidden" value="true" id="hongboUseYn"> <input type="hidden" value="0" id="po">
+<input type="hidden" value="T31" id="od">
+<input type="hidden" value="" id="sk">
+<input type="hidden" value="" id="sv">
+<input type="hidden" value="0" id="voCategory">
+
+<input type="hidden" value="false" id="isGroup">
+<input type="hidden" value="" id="groupCd">
+<input type="hidden" value="jirum" id="boardCd">
+<input type="hidden" value="알뜰구매" id="boardName">
+<input type="hidden" value="false" id="searchIsVaild">
+<input type="hidden" value="0" id="pt">
+
+<script src="/service/js/bundle/list-pc.js?261103v1.261103v1"></script> 
+
+
+</body>
+</html>

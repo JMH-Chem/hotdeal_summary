@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "_spark.html" import spark %}
+{% block title %}{{ item.name }} · 가격 추적{% endblock %}
+{% block content %}
+<p><a href="/track">← 추적 목록</a></p>
+<h1>{{ item.name }}</h1>
+<div class="summary-cards">
+  <div class="card hl"><div class="muted">현재가</div><div class="big">{{ item.last_price | won }}</div><div>{{ item.last_mall or '' }}</div></div>
+  <div class="card"><div class="muted">역대 최저</div><div class="big">{{ item.lowest_price | won }}</div></div>
+  <div class="card"><div class="muted">역대 최고</div><div class="big">{{ item.highest_price | won }}</div></div>
+  <div class="card"><div class="muted">알림 조건</div><div>{% if item.target_price %}목표가 {{ item.target_price | won }}{% endif %}{% if item.drop_percent %}<br>{{ item.drop_percent }}% 이상 하락{% endif %}<br>역대 최저 갱신</div></div>
+</div>
+<div class="card chart">{{ spark(history | map(attribute='price') | list, 720, 160) }}</div>
+<div class="actions">
+  {% if item.url %}<a class="btn" href="{{ item.url }}" target="_blank" rel="noopener">구매 페이지 ↗</a>{% endif %}
+  {% if item.kind == 'query' %}<a class="btn" href="/compare?q={{ item.query | urlencode }}">지금 가격 비교</a>{% endif %}
+  <form method="post" action="/track/{{ item.id }}/check" class="inline"><button>지금 가격 확인</button></form>
+  <form method="post" action="/track/{{ item.id }}/delete" class="inline"><button class="danger">삭제</button></form>
+</div>
+<table class="table">
+  <thead><tr><th>시각</th><th>가격</th><th>판매처</th><th>소스</th></tr></thead>
+  <tbody>
+  {% for h in history | reverse %}
+    <tr><td>{{ h.checked_at | kst('%Y-%m-%d %H:%M') }}</td><td>{{ h.price | won }}</td><td>{{ h.mall or '' }}</td><td>{{ h.provider or '' }}</td></tr>
+  {% else %}<tr><td colspan="4" class="empty">기록 없음 — 가격 소스 API 키 설정을 확인하세요.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

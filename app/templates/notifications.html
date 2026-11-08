@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}알림 · 핫딜요약{% endblock %}
+{% block content %}
+<h1>🔔 알림</h1>
+<p class="muted">텔레그램(TELEGRAM_BOT_TOKEN/CHAT_ID)이나 디스코드 웹훅(DISCORD_WEBHOOK_URL)을 설정하면 같은 알림이 전송됩니다.</p>
+<ul class="deals compact">
+{% for n in rows %}
+  <li class="{{ 'unread' if not n.is_read }}"><span class="chip">{{ n.kind }}</span>
+    {% if n.url %}<a href="{{ n.url }}" target="_blank" rel="noopener">{{ n.title }}</a>{% else %}{{ n.title }}{% endif %}
+    <span class="muted">{{ n.body }} · {{ n.created_at | kst }}</span></li>
+{% else %}<li class="empty">알림이 없습니다.</li>{% endfor %}
+</ul>
+{% endblock %}

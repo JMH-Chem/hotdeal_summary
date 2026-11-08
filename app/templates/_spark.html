@@ -1,0 +1,9 @@
+{% macro spark(values, width=140, height=36) -%}
+{%- if values and values|length > 1 -%}
+{%- set lo = values|min -%}{%- set hi = values|max -%}{%- set span = (hi - lo) or 1 -%}
+{%- set step = width / (values|length - 1) -%}
+<svg class="spark" width="{{ width }}" height="{{ height }}" viewBox="0 0 {{ width }} {{ height }}" role="img" aria-label="가격 추이">
+  <polyline fill="none" stroke="currentColor" stroke-width="2" points="{% for v in values %}{{ (loop.index0 * step)|round(1) }},{{ (height - 3 - (v - lo) / span * (height - 6))|round(1) }} {% endfor %}"/>
+</svg>
+{%- elif values -%}<span class="muted small">기록 1건</span>{%- else -%}<span class="muted small">기록 없음</span>{%- endif -%}
+{%- endmacro %}
