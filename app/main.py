@@ -20,6 +20,7 @@ from .parsing import KST, deal_search_query, format_won, to_kst_str
 from .services.collector import collect_all
 from .services.compare import compare, landed_price
 from .services.customs import DUTY_RATES
+from .services.deals import PAGE_SIZE, query_deals
 from .services.events import load_events, related_coupons, related_deals, trending_events
 from .services.tracker import add_item, check_all, check_item
 from .sources.community import SOURCES
@@ -31,12 +32,17 @@ templates = Jinja2Templates(directory=str(APP_DIR / "templates"))
 templates.env.filters["won"] = format_won
 templates.env.filters["kst"] = to_kst_str
 templates.env.filters["deal_query"] = deal_search_query
-PAGE_SIZE = 40
+_initialized_paths: set[str] = set()
 
 
 def db():
-    conn = connect()
-    init_db(conn)
+    """요청마다 새 연결. 스키마 생성/마이그레이션은 DB 경로당 한 번만."""
+    path = get_settings().db_path
+    fresh = path not in _initialized_paths or (path != ":memory:" and not Path(path).exists())
+    conn = connect(path)
+    if fresh:
+        init_db(conn)
+        _initialized_paths.add(path)
     return conn
 
 
@@ -82,31 +88,6 @@ def render(request: Request, name: str, **ctx) -> HTMLResponse:
 
 
 # ------------------------------------------------------------------ 핫딜
-
-def query_deals(conn, q: str = "", source: str = "", only_ali: bool = False, only_coupon: bool = False,
-                page: int = 1, dedupe: bool = True, sort: str = "new"):
-    where, params = [], []
-    if q:
-        for tok in q.split():
-            where.append("title LIKE ?")
-            params.append(f"%{tok}%")
-    if source:
-        where.append("source_name = ?")
-        params.append(source)
-    if only_ali:
-        where.append("is_aliexpress = 1")
-    if only_coupon:
-        where.append("is_coupon = 1")
-    sql = "SELECT * FROM deals"
-    if where:
-        sql += " WHERE " + " AND ".join(where)
-    if dedupe:
-        sql = f"SELECT * FROM ({sql}) GROUP BY COALESCE(dedupe_key, id)"
-    order = "COALESCE(views, 0) DESC, posted_at DESC" if sort == "views" else "posted_at DESC"
-    sql += f" ORDER BY {order} LIMIT ? OFFSET ?"
-    params += [PAGE_SIZE, (page - 1) * PAGE_SIZE]
-    return conn.execute(sql, params).fetchall()
-
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, q: str = "", source: str = "", ali: int = 0, coupon: int = 0, sort: str = "new",

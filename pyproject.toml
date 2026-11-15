@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "한국 커뮤니티 핫딜 · 최저가 비교(알리 포함) · 가격 추적 알림 · 행사/쿠폰 모아보기"
 requires-python = ">=3.13"
 dependencies = [
+    "anthropic>=2.8.0",
     "beautifulsoup4>=4.15.0",
     "fastapi>=0.162.2",
     "httpx>=0.28.1",

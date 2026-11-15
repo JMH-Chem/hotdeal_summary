@@ -117,11 +117,14 @@ async def collect_source(conn: sqlite3.Connection, client: httpx.AsyncClient, sr
     run.fetched = len(raws)
     for raw in raws:
         new_id = store_deal(conn, raw, src.tags)
+        # 쓰기 트랜잭션을 연 채로 await하면 다른 작업(AI 조사 등)의 쓰기가 이벤트 루프를 막으므로 바로 커밋
+        conn.commit()
         if new_id is None:
             continue
         run.inserted += 1
         if "coupon" in src.tags or looks_like_coupon(raw.title, raw.summary):
             run.coupons += await _coupon_pass(conn, client, src, raw, budget)
+            conn.commit()
         if not first_run:  # 최초 적재 때는 과거 글로 알림 폭탄이 가지 않도록 생략
             await _keyword_pass(conn, raw, client)
     conn.commit()

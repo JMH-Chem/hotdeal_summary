@@ -36,6 +36,27 @@ class Settings:
     telegram_chat_id: str
     discord_webhook_url: str
     usd_krw: float
+    # --- AI 최저가 탐색 (Claude API + 웹 검색/페치) ---
+    ai_model: str
+    ai_effort: str
+    ai_max_searches: int
+    ai_max_fetches: int
+    ai_fetch_max_tokens: int
+    ai_search_direct: bool          # True면 동적 필터링 없이 직접 검색(allowed_callers=["direct"])
+    ai_max_continuations: int
+    ai_daily_budget_usd: float
+    ai_run_reserve_usd: float
+    ai_run_max_usd: float
+    ai_run_timeout_sec: int
+    ai_daily_hour: int              # KST 이 시각 이후에 '매일 AI 조사' 실행
+    ai_force_enabled: bool
+
+    @property
+    def ai_configured(self) -> bool:
+        """Anthropic 자격증명이 있어 보이는지. SDK는 프로필 로그인도 읽으므로 AI_ENABLED=1로 강제할 수 있다."""
+        return self.ai_force_enabled or any(
+            _env(name) for name in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_PROFILE")
+        )
 
     @property
     def naver_enabled(self) -> bool:
@@ -64,4 +85,17 @@ def get_settings() -> Settings:
         telegram_chat_id=_env("TELEGRAM_CHAT_ID"),
         discord_webhook_url=_env("DISCORD_WEBHOOK_URL"),
         usd_krw=float(_env("USD_KRW", "1400")),
+        ai_model=_env("AI_MODEL", "claude-opus-5-5"),
+        ai_effort=_env("AI_EFFORT", "high"),
+        ai_max_searches=int(_env("AI_MAX_SEARCHES", "8")),
+        ai_max_fetches=int(_env("AI_MAX_FETCHES", "10")),
+        ai_fetch_max_tokens=int(_env("AI_FETCH_MAX_TOKENS", "20000")),
+        ai_search_direct=_env("AI_SEARCH_DIRECT", "0") == "1",
+        ai_max_continuations=int(_env("AI_MAX_CONTINUATIONS", "4")),
+        ai_daily_budget_usd=float(_env("AI_DAILY_BUDGET_USD", "2.0")),
+        ai_run_reserve_usd=float(_env("AI_RUN_RESERVE_USD", "1.0")),
+        ai_run_max_usd=float(_env("AI_RUN_MAX_USD", "1.5")),
+        ai_run_timeout_sec=int(_env("AI_RUN_TIMEOUT_SEC", "600")),
+        ai_daily_hour=int(_env("AI_DAILY_HOUR", "9")),
+        ai_force_enabled=_env("AI_ENABLED", "0") == "1",
     )
