@@ -380,7 +380,9 @@ def friendly_api_error(exc: Exception) -> str | None:
         import anthropic
     except ImportError:  # pragma: no cover
         return None
-    if isinstance(exc, anthropic.AuthenticationError):
+    credentials_error = getattr(anthropic, "CredentialsError", None)
+    if isinstance(exc, anthropic.AuthenticationError) or (credentials_error and isinstance(exc, credentials_error)) or (
+            isinstance(exc, TypeError) and "resolve authentication" in str(exc)):
         return "Anthropic API 키가 없거나 잘못되었습니다 (ANTHROPIC_API_KEY 확인)."
     if isinstance(exc, anthropic.PermissionDeniedError):
         return "이 API 키로는 요청한 모델이나 웹 검색 기능을 쓸 수 없습니다 (콘솔에서 웹 검색 허용 여부 확인)."
@@ -402,7 +404,10 @@ async def research(inp: ResearchInput, settings: Settings, *, budget_left_usd: f
                    on_response: OnResponse | None = None) -> ResearchOutcome:
     close: Callable[[], Awaitable[None]] | None = None
     if send is None or parse is None:
-        sdk_send, sdk_parse, close = _sdk_functions()
+        try:
+            sdk_send, sdk_parse, close = _sdk_functions()
+        except Exception as exc:  # noqa: BLE001 - 자격증명 없음 등: 요청 전이라 과금 없음
+            raise ResearchError(f"Anthropic 클라이언트를 만들지 못했습니다 (API 키 확인): {exc}"[:300]) from exc
         send = send or sdk_send
         parse = parse or sdk_parse
     usage = UsageTotals()

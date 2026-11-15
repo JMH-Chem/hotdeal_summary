@@ -187,3 +187,27 @@ def test_research_without_report_text_fails_cleanly():
 
     with pytest.raises(ResearchError, match="보고서"):
         asyncio.run(research(inp(), settings(), budget_left_usd=5, send=fake, parse=never))
+
+
+def test_missing_credentials_is_a_free_failure(monkeypatch):
+    import app.services.ai_research as ai
+
+    def boom():
+        raise RuntimeError("The api_key client option must be set")
+
+    monkeypatch.setattr(ai, "_sdk_functions", boom)
+    with pytest.raises(ResearchError) as err:
+        asyncio.run(research(inp(), settings(), budget_left_usd=5))
+    assert "API 키" in str(err.value) and err.value.uncertain_cost is False
+
+
+def test_no_credentials_at_request_time_is_a_free_failure():
+    async def send(params):
+        raise TypeError("Could not resolve authentication method. Expected one of api_key, auth_token")
+
+    async def never(params):  # pragma: no cover
+        raise AssertionError
+
+    with pytest.raises(ResearchError) as err:
+        asyncio.run(research(inp(), settings(), budget_left_usd=5, send=send, parse=never))
+    assert "API 키" in str(err.value) and err.value.uncertain_cost is False

@@ -382,6 +382,18 @@ def page_age_days(page_age: str | None, now: datetime) -> float | None:
     return None
 
 
+def _kst_label(iso: str | None) -> str:
+    if not iso:
+        return "시각 미상"
+    try:
+        dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    except ValueError:
+        return iso
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone(timedelta(hours=9))).strftime("%m-%d %H:%M 기준")
+
+
 @dataclass
 class Verdict:
     level: str
@@ -409,7 +421,7 @@ def verify_candidate(cand: dict[str, Any], ev: Evidence, now: datetime | None = 
         if is_list_page(doc.url):
             flags.append("list_page")
             return Verdict("citation", "목록/검색 페이지에서 같은 금액 확인 (다른 상품 가격일 수 있음)", flags)
-        return Verdict("page", f"가져온 페이지에서 같은 금액 확인 ({doc.retrieved_at or '시각 미상'})", flags)
+        return Verdict("page", f"가져온 페이지에서 같은 금액 확인 ({_kst_label(doc.retrieved_at)})", flags)
     ref = cand.get("ref")
     for cite in ev.citations:
         cite_key = normalize_url(cite.url)

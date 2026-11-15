@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}핫딜 요약{% endblock %}</title>
   <link rel="stylesheet" href="/static/style.css">
+  {% block head %}{% endblock %}
 </head>
 <body>
 <header class="top">
@@ -12,6 +13,7 @@
   <nav>
     <a href="/" class="{{ 'on' if request.url.path == '/' }}">핫딜</a>
     <a href="/compare" class="{{ 'on' if request.url.path.startswith('/compare') }}">최저가 비교</a>
+    <a href="/research" class="{{ 'on' if request.url.path.startswith('/research') }}">AI 최저가</a>
     <a href="/track" class="{{ 'on' if request.url.path.startswith('/track') }}">가격 추적</a>
     <a href="/events" class="{{ 'on' if request.url.path.startswith('/events') }}">행사</a>
     <a href="/coupons" class="{{ 'on' if request.url.path.startswith('/coupons') }}">쿠폰</a>

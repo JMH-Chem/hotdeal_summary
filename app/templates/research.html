@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}AI 최저가 탐색 · 핫딜요약{% endblock %}
+{% block content %}
+<h1>🤖 AI 최저가 탐색</h1>
+<p class="muted">상품 하나를 정해 주면 AI가 웹을 검색해 우리가 수집하지 않는 쇼핑몰·홈쇼핑·브랜드몰·해외직구까지 찾아보고, 그날 가장 싸게 살 수 있는 곳을 고릅니다. AI가 말한 가격은 <b>가져온 페이지나 검색 인용문에서 같은 금액이 확인될 때만</b> 최저가로 인정합니다.</p>
+
+{% if error %}<div class="card alert">⚠️ {{ error }}</div>{% endif %}
+{% if not ai.configured %}
+<div class="card alert">AI 조사를 쓰려면 서버에 <code>ANTHROPIC_API_KEY</code>를 설정해야 합니다 (<code>.env.example</code> 참고). 지금은 요청 버튼이 꺼져 있습니다.</div>
+{% endif %}
+{% if active %}
+<div class="card">⏳ 진행 중인 조사: <a href="/research/{{ active.id }}">{{ active.query }}</a> ({{ STATUS_LABELS[active.status] }}) — 한 번에 하나씩 조사합니다.</div>
+{% endif %}
+
+<form class="card form" method="post" action="/research">
+  <div class="filters">
+    <input type="search" name="q" value="{{ q }}" placeholder="상품명을 구체적으로 (예: WD BLACK SN850X 1TB, 햇반 210g 36개)" required>
+    <select name="category" title="해외직구 관부가세 추정용 품목">
+      {% for key, (rate, label) in categories.items() %}<option value="{{ key }}" {{ 'selected' if key == category }}>{{ label }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="filters">
+    <label><input type="checkbox" name="include_overseas" value="1" checked> 해외직구 포함</label>
+    <label><input type="checkbox" name="allow_used" value="1"> 중고·리퍼 포함</label>
+    <button {{ 'disabled' if not ai.configured }}>AI로 최저가 찾기</button>
+  </div>
+  <p class="muted small">모델 <code>{{ ai.model }}</code> · 1회 조사에 웹 검색 약 {{ ai.max_searches }}회(검색 1회 $0.01)와 토큰 비용이 듭니다 · 오늘 사용 약 ${{ '%.2f' % ai.spent }} / 하루 예산 ${{ '%.2f' % ai.budget }} (1회 예약 ${{ '%.2f' % ai.reserve }}) · 같은 날 같은 상품은 저장된 결과를 다시 보여줍니다.</p>
+</form>
+
+<h2>최근 조사</h2>
+<table class="table">
+  <thead><tr><th>날짜</th><th>상품</th><th>상태</th><th>확인된 최저가</th><th>비용(추정)</th></tr></thead>
+  <tbody>
+  {% for r in runs %}
+    <tr>
+      <td>{{ r.run_date }}</td>
+      <td><a href="/research/{{ r.id }}">{{ r.query }}</a>{% if r.item_id %} <span class="chip">추적 상품</span>{% endif %}</td>
+      <td><span class="chip st-{{ r.status }}">{{ STATUS_LABELS.get(r.status, r.status) }}</span></td>
+      <td>{% if r.best_price %}<b>{{ r.best_price | won }}</b>{% elif r.status == 'done' %}<span class="muted">확인된 가격 없음</span>{% else %}-{% endif %}</td>
+      <td class="muted">${{ '%.3f' % (r.cost_usd or 0) }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="empty">아직 조사 기록이 없습니다.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

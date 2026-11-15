@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}{{ run.query }} · AI 최저가{% endblock %}
+{% block head %}{% if run.status in ('queued', 'running') %}<meta http-equiv="refresh" content="5">{% endif %}{% endblock %}
+{% macro badges(c) -%}
+  <span class="chip v-{{ c.verification }}" title="{{ c.verify_note or '' }}">{{ VERIFY_LABELS.get(c.verification, c.verification) }}</span>
+  {% if c.match and c.match != 'exact' %}<span class="chip warn">{{ MATCH_LABELS.get(c.match, c.match) }}</span>{% endif %}
+  {% for f in c.flags %}<span class="chip flag-{{ f }}">{{ FLAG_LABELS.get(f, f) }}</span>{% endfor %}
+  {% if c.in_stock == 'no' %}<span class="chip warn">품절</span>{% endif %}
+{%- endmacro %}
+{% macro row(c) -%}
+  <tr class="{{ 'best' if ranking and ranking.best and c.id == ranking.best.id }}">
+    <td><b>{{ c.seller or '-' }}</b><div class="muted small">{{ CHANNEL_LABELS.get(c.channel, c.channel or '') }}{% if c.origin == 'system' %} · 우리 수집기{% else %} · AI{% endif %}</div></td>
+    <td>{% if c.url %}<a href="{{ c.url | safe_url }}" target="_blank" rel="noopener nofollow noreferrer">{{ c.title or c.url }}</a>{% else %}{{ c.title }}{% endif %}
+      <div>{{ badges(c) }}</div>
+      {% if c.conditions or c.time_limited or c.notes %}<div class="muted small">{{ c.conditions }}{% if c.time_limited %} · ⏰ {{ c.time_limited }}{% endif %}{% if c.notes %} · {{ c.notes }}{% endif %}</div>{% endif %}
+    </td>
+    <td>{{ c.price | won }}{% if c.original_currency and c.original_currency not in ('KRW', '') and c.original_amount and c.original_amount > 0 %}<div class="muted small">{{ c.original_currency }} {{ c.original_amount }}</div>{% endif %}
+      {% if c.conditional_price and c.conditional_price > 0 %}<div class="muted small">조건부 {{ c.conditional_price | won }}</div>{% endif %}</td>
+    <td><b>{{ c.landed_price | won }}</b>{% if c.tax_note %}<div class="muted small">{{ c.tax_note }}</div>{% endif %}</td>
+    <td class="muted small">{{ c.verify_note or '' }}{% if c.evidence and c.origin == 'ai' %}<details><summary>근거</summary>{{ c.evidence }}</details>{% endif %}</td>
+  </tr>
+{%- endmacro %}
+{% block content %}
+<p><a href="/research">← AI 최저가 탐색</a></p>
+<h1>{{ run.query }} <small class="muted">{{ run.run_date }} 기준</small></h1>
+<p class="muted small">
+  <span class="chip st-{{ run.status }}">{{ STATUS_LABELS.get(run.status, run.status) }}</span>
+  모델 {{ run.model }} · 해외직구 {{ '포함' if options.include_overseas else '제외' }} · {{ '중고 포함' if options.allow_used else '새 상품만' }}
+  · 웹 검색 {{ run.web_searches }}회 · 페이지 {{ run.web_fetches }}개 · 비용 약 ${{ '%.3f' % (run.cost_usd or 0) }}
+</p>
+
+{% if run.status in ('queued', 'running') %}
+  <div class="card">⏳ AI가 조사 중입니다. 보통 1~5분 걸리며 이 페이지는 자동으로 새로고침됩니다.</div>
+{% elif run.status in ('error', 'interrupted') %}
+  <div class="card alert">⚠️ {{ run.error }}</div>
+{% endif %}
+
+{% if ranking %}
+  {% if ranking.best %}{% set b = ranking.best %}
+  <div class="summary-cards">
+    <div class="card hl">
+      <div class="muted">{{ run.run_date }} 확인된 최저가 (실구매가)</div>
+      <div class="big">{{ b.landed_price | won }}</div>
+      <div><b>{{ b.seller }}</b> · {{ VERIFY_LABELS.get(b.verification) }}</div>
+      {% if b.url %}<a class="btn" href="{{ b.url | safe_url }}" target="_blank" rel="noopener nofollow noreferrer">판매 페이지 ↗</a>{% endif %}
+    </div>
+    {% if ranking.conditional_best %}<div class="card"><div class="muted">카드·쿠폰 조건 적용 시</div><div class="big">{{ ranking.conditional_best.conditional_price | won }}</div><div>{{ ranking.conditional_best.seller }} · {{ ranking.conditional_best.conditions }}</div></div>{% endif %}
+    {% if ranking.baseline_median %}<div class="card"><div class="muted">우리 수집기 일치 상품 중앙값</div><div class="big">{{ ranking.baseline_median | won }}</div></div>{% endif %}
+  </div>
+  {% elif run.status == 'done' %}
+  <div class="card alert">
+    <b>확인된 최저가가 없습니다.</b> AI가 찾은 가격을 가져온 페이지나 검색 인용문에서 같은 금액으로 확인하지 못했습니다.
+    쿠팡·스마트스토어·홈쇼핑처럼 자동 접근을 막거나 화면을 스크립트로 그리는 사이트가 많기 때문입니다. 아래 미확인 후보는 직접 열어 확인하세요.
+  </div>
+  {% endif %}
+
+  {% if run.summary %}<div class="card"><h3>AI 요약</h3><p>{{ run.summary }}</p></div>{% endif %}
+
+  <h2>✅ 확인된 가격 ({{ ranking.confirmed | length }})</h2>
+  <table class="table">
+    <thead><tr><th>판매처</th><th>상품</th><th>가격</th><th>실구매가</th><th>확인 근거</th></tr></thead>
+    <tbody>{% for c in ranking.confirmed %}{{ row(c) }}{% else %}<tr><td colspan="5" class="empty">없음</td></tr>{% endfor %}</tbody>
+  </table>
+
+  {% if ranking.cheaper_unconfirmed %}
+  <h2>⚠️ 더 싸 보이지만 확인되지 않은 후보 ({{ ranking.cheaper_unconfirmed | length }})</h2>
+  <p class="muted small">AI 보고만 있거나, 오래된 정보이거나, 다른 옵션·비정상 저가로 보이는 후보입니다. 알림과 최저가 계산에서는 빠집니다. 구매 전 반드시 직접 확인하세요.</p>
+  <table class="table warn-table">
+    <thead><tr><th>판매처</th><th>상품</th><th>가격</th><th>실구매가</th><th>상태</th></tr></thead>
+    <tbody>{% for c in ranking.cheaper_unconfirmed %}{{ row(c) }}{% endfor %}</tbody>
+  </table>
+  {% endif %}
+
+  {% if ranking.others %}
+  <details class="card"><summary>그 밖의 후보 ({{ ranking.others | length }}) — 다른 상품, 더 비싼 미확인 후보 등</summary>
+    <table class="table"><thead><tr><th>판매처</th><th>상품</th><th>가격</th><th>실구매가</th><th>상태</th></tr></thead>
+    <tbody>{% for c in ranking.others %}{{ row(c) }}{% endfor %}</tbody></table>
+  </details>
+  {% endif %}
+{% endif %}
+
+{% if run.status == 'done' %}
+<div class="actions">
+  <form method="post" action="/research" class="inline">
+    <input type="hidden" name="q" value="{{ run.query }}"><input type="hidden" name="category" value="{{ options.category }}">
+    {% if options.include_overseas %}<input type="hidden" name="include_overseas" value="1">{% endif %}
+    {% if options.allow_used %}<input type="hidden" name="allow_used" value="1">{% endif %}
+    <input type="hidden" name="force" value="1">
+    <button {{ 'disabled' if not ai.configured }}>다시 조사 (비용 발생)</button>
+  </form>
+  {% if not run.item_id %}
+  <form method="post" action="/track" class="inline">
+    <input type="hidden" name="target" value="{{ run.query }}"><input type="hidden" name="name" value="{{ run.query }}">
+    <input type="hidden" name="ai_daily" value="1">
+    {% if ranking and ranking.best %}<input type="hidden" name="target_price" value="{{ ranking.best.landed_price - 1 }}">{% endif %}
+    <button class="secondary">📈 추적 + 매일 AI 조사</button>
+  </form>
+  {% else %}<a class="btn" href="/track/{{ run.item_id }}">추적 상품 보기</a>{% endif %}
+  <a class="btn" href="/compare?q={{ run.query | urlencode }}&category={{ options.category }}">수집기 비교 보기</a>
+</div>
+{% endif %}
+
+{% if history and history | length > 1 %}
+<h2>날짜별 확인된 최저가</h2>
+<table class="table"><thead><tr><th>날짜</th><th>최저가</th></tr></thead>
+<tbody>{% for h in history %}<tr><td><a href="/research/{{ h.id }}">{{ h.run_date }}</a></td><td>{{ h.best_price | won }}</td></tr>{% endfor %}</tbody></table>
+{% endif %}
+
+{% if sources %}
+<details class="card"><summary>출처 ({{ sources | length }}) — AI가 검색·확인한 페이지</summary>
+  <ul class="sources">
+  {% for s in sources %}<li><span class="chip">{{ {'fetch': '페이지', 'citation': '인용', 'search': '검색 결과'}[s.kind] }}</span> <a href="{{ s.url | safe_url }}" target="_blank" rel="noopener nofollow noreferrer">{{ s.title or s.url }}</a></li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+{% if diagnostics %}
+<details class="card"><summary>조사 진단</summary>
+  <ul class="muted small">
+    {% if diagnostics.profile %}<li>상품 정리: {{ diagnostics.profile.canonical_name }}{% if diagnostics.profile.model_codes %} · 모델 {{ diagnostics.profile.model_codes | join(', ') }}{% endif %}{% if diagnostics.profile.aliases %} · 별칭 {{ diagnostics.profile.aliases | join(', ') }}{% endif %}</li>{% endif %}
+    <li>검색어: {{ (diagnostics.queries or []) | join(' / ') or '-' }}</li>
+    <li>검색 결과 {{ diagnostics.search_results }}건 · 가져온 페이지 {{ diagnostics.fetched_pages }}개 · 인용 {{ diagnostics.citations }}개 · 우리 목록 {{ diagnostics.baseline_count }}개 · 관련 핫딜 {{ diagnostics.hot_deal_count }}개</li>
+    {% if diagnostics.fetch_errors %}<li>가져오기 실패: {% for u, code in diagnostics.fetch_errors %}{{ u.split('/')[2] if u and u.count('/') >= 2 else u }}({{ code }}){{ ', ' if not loop.last }}{% endfor %}</li>{% endif %}
+    {% if diagnostics.dropped %}<li>보고서와 달라 버린 후보: {% for ref, why in diagnostics.dropped %}{{ ref }}({{ why }}){{ ', ' if not loop.last }}{% endfor %}</li>{% endif %}
+    {% for n in diagnostics.notes or [] %}<li>{{ n }}</li>{% endfor %}
+    <li>토큰: 입력 {{ run.input_tokens }} · 출력 {{ run.output_tokens }} · 캐시 읽기 {{ run.cache_read_tokens }}</li>
+  </ul>
+</details>
+{% endif %}
+
+{% if run.report %}
+<details class="card"><summary>AI 조사 보고서 원문</summary><pre class="report">{{ run.report }}</pre></details>
+{% endif %}
+{% endblock %}

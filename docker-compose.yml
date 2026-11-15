@@ -2,7 +2,7 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"  # 비용이 드는 AI 조사 버튼이 있으니 기본은 이 컴퓨터에서만 접속
     env_file:
       - path: .env
         required: false

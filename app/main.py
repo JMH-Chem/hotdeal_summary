@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote, urlsplit
 
 from fastapi import FastAPI, Form, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -22,6 +23,8 @@ from .services.compare import compare, landed_price
 from .services.customs import DUTY_RATES
 from .services.deals import PAGE_SIZE, query_deals
 from .services.events import load_events, related_coupons, related_deals, trending_events
+from .services import research as research_service
+from .services.evidence import is_safe_link, kst_today
 from .services.tracker import add_item, check_all, check_item
 from .sources.community import SOURCES
 from .sources.shopping import aliexpress_product_id
@@ -32,6 +35,17 @@ templates = Jinja2Templates(directory=str(APP_DIR / "templates"))
 templates.env.filters["won"] = format_won
 templates.env.filters["kst"] = to_kst_str
 templates.env.filters["deal_query"] = deal_search_query
+templates.env.filters["safe_url"] = lambda url: url if is_safe_link(url) else "#"  # javascript: 등 차단
+templates.env.globals.update(
+    VERIFY_LABELS={"system": "수집기 확인", "page": "페이지 확인", "citation": "검색 인용 확인",
+                   "stale": "오래된 정보", "unverified": "미확인", "url_unseen": "출처 불명 링크"},
+    FLAG_LABELS={"suspicious_low": "비정상 저가 의심", "unknown_shop": "처음 보는 판매처 · 사기몰 주의",
+                 "list_page": "목록 페이지 기준", "community": "커뮤니티 글 기준", "unsafe_link": "위험 링크 제거"},
+    CHANNEL_LABELS={"open_market": "오픈마켓", "mall": "종합몰", "home_shopping": "홈쇼핑", "brand_store": "브랜드몰",
+                    "price_compare": "가격비교", "community": "커뮤니티", "overseas": "해외직구", "other": "기타"},
+    MATCH_LABELS={"exact": "정확히 일치", "close": "비슷함", "different": "다른 상품"},
+    STATUS_LABELS={"queued": "대기 중", "running": "조사 중", "done": "완료", "error": "실패", "interrupted": "중단됨"},
+)
 _initialized_paths: set[str] = set()
 
 
@@ -64,14 +78,23 @@ async def _loop(name: str, interval: int, job) -> None:
 async def lifespan(app: FastAPI):
     settings = get_settings()
     conn = db()
-    conn.close()
+    try:
+        swept = research_service.sweep_interrupted(conn)  # 워커 1개 전제: 이전 프로세스의 미완료 조사 정리
+        if swept:
+            log.info("marked %s unfinished AI research runs as interrupted", swept)
+    finally:
+        conn.close()
     tasks = []
     if settings.enable_scheduler:
         tasks.append(asyncio.create_task(_loop("collect", settings.collect_interval_sec, collect_all)))
         tasks.append(asyncio.create_task(_loop("prices", settings.price_check_interval_sec, check_all)))
+        # 1시간마다 깨어나 KST AI_DAILY_HOUR 이후 '오늘 아직 조사 안 한' 추적 상품만 조사 (재시작해도 중복 없음)
+        tasks.append(asyncio.create_task(_loop("ai_daily", 3600, research_service.daily_job)))
     yield
     for t in tasks:
         t.cancel()
+    await asyncio.gather(*tasks, return_exceptions=True)
+    await research_service.shutdown_tasks()
 
 
 app = FastAPI(title="핫딜 요약", lifespan=lifespan)
@@ -85,6 +108,17 @@ def render(request: Request, name: str, **ctx) -> HTMLResponse:
     finally:
         conn.close()
     return templates.TemplateResponse(request, name, {"unread": unread, "now": datetime.now(KST), **ctx})
+
+
+def require_same_origin(request: Request) -> None:
+    """돈이 드는 POST(AI 조사)는 다른 사이트에서 보낸 요청(CSRF)을 거부한다."""
+    host = request.headers.get("host", "")
+    for header in ("origin", "referer"):
+        value = request.headers.get(header)
+        if value:
+            if urlsplit(value).netloc != host:
+                raise HTTPException(403, "다른 사이트에서 보낸 요청은 처리하지 않습니다")
+            return
 
 
 # ------------------------------------------------------------------ 핫딜
@@ -122,9 +156,10 @@ def status_page(request: Request):
     conn = db()
     try:
         status = {r["source"]: r for r in conn.execute("SELECT * FROM source_status")}
+        budget = _ai_budget(conn)
     finally:
         conn.close()
-    return render(request, "status.html", sources=SOURCES, status=status, settings=get_settings())
+    return render(request, "status.html", sources=SOURCES, status=status, settings=get_settings(), ai=budget)
 
 
 # ------------------------------------------------------------------ 쿠폰 / 행사
@@ -189,6 +224,88 @@ async def api_compare(q: str, category: str = "general"):
                           for p in result.providers]}
 
 
+# ------------------------------------------------------------------ AI 최저가 탐색
+
+def _ai_budget(conn) -> dict:
+    settings = get_settings()
+    today = kst_today()
+    spent = research_service.today_spent(conn, today)
+    return {"configured": settings.ai_configured, "model": settings.ai_model, "effort": settings.ai_effort,
+            "budget": settings.ai_daily_budget_usd, "spent": spent, "reserve": settings.ai_run_reserve_usd,
+            "left": max(0.0, settings.ai_daily_budget_usd - spent), "daily_hour": settings.ai_daily_hour,
+            "today": today, "max_searches": settings.ai_max_searches}
+
+
+@app.get("/research", response_class=HTMLResponse)
+def research_page(request: Request, q: str = "", category: str = "general", error: str = ""):
+    conn = db()
+    try:
+        runs = conn.execute("SELECT * FROM research_runs ORDER BY id DESC LIMIT 40").fetchall()
+        budget = _ai_budget(conn)
+        active = conn.execute("SELECT * FROM research_runs WHERE status IN ('queued','running') LIMIT 1").fetchone()
+    finally:
+        conn.close()
+    return render(request, "research.html", runs=runs, ai=budget, q=q, category=category, categories=DUTY_RATES,
+                  error=error, active=active)
+
+
+@app.post("/research")
+async def research_start(request: Request, q: str = Form(""), category: str = Form("general"),
+                         include_overseas: str = Form(""), allow_used: str = Form(""), force: str = Form(""),
+                         item_id: str = Form("")):
+    require_same_origin(request)
+    conn = db()
+    try:
+        result = research_service.create_run(
+            conn, q, category=category if category in DUTY_RATES else "general",
+            include_overseas=bool(include_overseas), allow_used=bool(allow_used), force=bool(force),
+            item_id=int(item_id) if item_id.isdigit() else None,
+        )
+    finally:
+        conn.close()
+    if result.error:
+        target = f"/research?q={quote(q)}&error={quote(result.error)}"
+        return RedirectResponse(target, status_code=303)
+    if not result.reused:
+        research_service.start_run_task(result.run_id)
+    return RedirectResponse(f"/research/{result.run_id}", status_code=303)
+
+
+@app.get("/research/{run_id}", response_class=HTMLResponse)
+def research_detail(request: Request, run_id: int):
+    conn = db()
+    try:
+        view = research_service.run_view(conn, run_id)
+        if view is None:
+            raise HTTPException(404)
+        budget = _ai_budget(conn)
+    finally:
+        conn.close()
+    return render(request, "research_detail.html", ai=budget, **view)
+
+
+@app.get("/api/research/{run_id}")
+def api_research(run_id: int):
+    conn = db()
+    try:
+        view = research_service.run_view(conn, run_id)
+        if view is None:
+            raise HTTPException(404)
+        ranking = view["ranking"]
+        return {
+            "run": dict(view["run"]),
+            "options": view["options"],
+            "best": ranking.best if ranking else None,
+            "confirmed": ranking.confirmed if ranking else [],
+            "cheaper_unconfirmed": ranking.cheaper_unconfirmed if ranking else [],
+            "others": ranking.others if ranking else [],
+            "sources": [dict(s) for s in view["sources"]],
+            "diagnostics": view["diagnostics"],
+        }
+    finally:
+        conn.close()
+
+
 # ------------------------------------------------------------------ 가격추적 / 알림
 
 def _int_or_none(value: str | None) -> int | None:
@@ -214,8 +331,9 @@ def track_page(request: Request):
 
 
 @app.post("/track")
-async def track_add(name: str = Form(""), target: str = Form(""), target_price: str = Form(""),
-                    drop_percent: str = Form("")):
+async def track_add(request: Request, name: str = Form(""), target: str = Form(""), target_price: str = Form(""),
+                    drop_percent: str = Form(""), ai_daily: str = Form("")):
+    require_same_origin(request)
     target = target.strip()
     if not target:
         raise HTTPException(400, "검색어 또는 알리 상품 URL을 입력하세요")
@@ -232,6 +350,9 @@ async def track_add(name: str = Form(""), target: str = Form(""), target_price: 
             target_price=_int_or_none(target_price),
             drop_percent=float(drop_percent) if drop_percent.strip() else None,
         )
+        if ai_daily:
+            conn.execute("UPDATE tracked_items SET ai_daily=1 WHERE id=?", (item_id,))
+            conn.commit()
         try:
             await check_item(conn, item_id)
         except Exception as exc:  # noqa: BLE001 - 첫 조회 실패해도 등록은 유지
@@ -249,9 +370,26 @@ def track_detail(request: Request, item_id: int):
         if item is None:
             raise HTTPException(404)
         history = conn.execute("SELECT * FROM price_history WHERE item_id=? ORDER BY checked_at", (item_id,)).fetchall()
+        ai_runs = conn.execute(
+            """SELECT r.*, c.seller AS best_seller, c.url AS best_url, c.verification AS best_verification
+               FROM research_runs r LEFT JOIN research_candidates c ON c.id = r.best_candidate_id
+               WHERE r.item_id=? ORDER BY r.id DESC LIMIT 30""", (item_id,)).fetchall()
+        budget = _ai_budget(conn)
     finally:
         conn.close()
-    return render(request, "track_detail.html", item=item, history=history)
+    return render(request, "track_detail.html", item=item, history=history, ai_runs=ai_runs, ai=budget)
+
+
+@app.post("/track/{item_id}/ai")
+def track_ai_toggle(request: Request, item_id: int, enabled: str = Form("")):
+    require_same_origin(request)
+    conn = db()
+    try:
+        conn.execute("UPDATE tracked_items SET ai_daily=? WHERE id=?", (1 if enabled else 0, item_id))
+        conn.commit()
+    finally:
+        conn.close()
+    return RedirectResponse(f"/track/{item_id}", status_code=303)
 
 
 @app.post("/track/{item_id}/check")

@@ -24,6 +24,12 @@
     {% if result.cheapest_overseas %}<div class="card"><div class="muted">알리/해외 최저 (관부가세 추정 포함)</div><div class="big">{{ landed(result.cheapest_overseas) | won }}</div><div>{{ result.cheapest_overseas.mall or '' }}</div></div>{% endif %}
   </div>
   {% endif %}
+  <form method="post" action="/research" class="card ai-cta">
+    <input type="hidden" name="q" value="{{ q }}"><input type="hidden" name="category" value="{{ category }}">
+    <input type="hidden" name="include_overseas" value="1">
+    <span>여기 없는 쇼핑몰·홈쇼핑·브랜드몰·해외직구까지 찾아볼까요?</span>
+    <button>🤖 AI로 더 찾아보기</button>
+  </form>
   <form method="post" action="/track" class="inline-track">
     <input type="hidden" name="target" value="{{ q }}">
     <input type="hidden" name="name" value="{{ q }}">

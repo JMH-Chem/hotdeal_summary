@@ -17,6 +17,29 @@
   <form method="post" action="/track/{{ item.id }}/check" class="inline"><button>지금 가격 확인</button></form>
   <form method="post" action="/track/{{ item.id }}/delete" class="inline"><button class="danger">삭제</button></form>
 </div>
+<section class="card">
+  <div class="event-head">
+    <h2>🤖 AI 일별 최저가</h2>
+    <span class="chip {{ 'ok' if item.ai_daily else '' }}">{{ '매일 조사 켜짐' if item.ai_daily else '매일 조사 꺼짐' }}</span>
+    <form method="post" action="/track/{{ item.id }}/ai" class="inline">
+      <input type="hidden" name="enabled" value="{{ '' if item.ai_daily else '1' }}">
+      <button class="secondary" {{ 'disabled' if not ai.configured and not item.ai_daily }}>{{ '끄기' if item.ai_daily else '매일 AI 조사 켜기' }}</button>
+    </form>
+  </div>
+  <p class="muted small">켜면 매일 한국 시간 {{ ai.daily_hour }}시 이후 한 번, AI가 웹을 조사해 확인된 최저가를 기록하고 목표가·하락·역대 최저 알림을 보냅니다 (AI 기록끼리 비교, 하루 예산 ${{ '%.2f' % ai.budget }} 안에서).{% if not ai.configured %} 지금은 ANTHROPIC_API_KEY가 없어 실행되지 않습니다.{% endif %}</p>
+  <table class="table">
+    <thead><tr><th>날짜</th><th>확인된 최저가</th><th>판매처</th><th>상태</th></tr></thead>
+    <tbody>
+    {% for r in ai_runs %}
+      <tr><td><a href="/research/{{ r.id }}">{{ r.run_date }}</a></td>
+        <td>{% if r.best_price %}<b>{{ r.best_price | won }}</b>{% else %}-{% endif %}</td>
+        <td>{% if r.best_url %}<a href="{{ r.best_url | safe_url }}" target="_blank" rel="noopener nofollow noreferrer">{{ r.best_seller }}</a>{% else %}{{ r.best_seller or '' }}{% endif %}
+          {% if r.best_verification %}<span class="chip v-{{ r.best_verification }}">{{ VERIFY_LABELS.get(r.best_verification) }}</span>{% endif %}</td>
+        <td><span class="chip st-{{ r.status }}">{{ STATUS_LABELS.get(r.status, r.status) }}</span></td></tr>
+    {% else %}<tr><td colspan="4" class="empty">AI 조사 기록 없음</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</section>
 <table class="table">
   <thead><tr><th>시각</th><th>가격</th><th>판매처</th><th>소스</th></tr></thead>
   <tbody>

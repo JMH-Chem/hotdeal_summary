@@ -23,5 +23,11 @@
   <li>알리익스프레스 Affiliate API: {{ '설정됨' if settings.ali_enabled else '미설정 (ALI_APP_KEY / ALI_APP_SECRET / ALI_TRACKING_ID)' }}</li>
   <li>다나와 검색: 키 불필요 (페이지 구조 변경 시 파서 수정 필요)</li>
 </ul>
+<h2>AI 최저가 탐색</h2>
+<ul>
+  <li>Anthropic 자격증명: {{ '설정됨' if ai.configured else '미설정 (ANTHROPIC_API_KEY)' }} · 모델 <code>{{ ai.model }}</code> · effort {{ ai.effort }}</li>
+  <li>오늘({{ ai.today }}) 사용 약 ${{ '%.3f' % ai.spent }} / 하루 예산 ${{ '%.2f' % ai.budget }} · 1회 예약 ${{ '%.2f' % ai.reserve }}</li>
+  <li>추적 상품 '매일 AI 조사'는 한국 시간 {{ ai.daily_hour }}시 이후 하루 한 번</li>
+</ul>
 <form method="post" action="/admin/collect"><button>지금 수집 실행</button></form>
 {% endblock %}
